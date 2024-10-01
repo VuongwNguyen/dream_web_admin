@@ -25,3 +25,14 @@ body {
     text-wrap: balance;
   }
 }
+
+html,
+body,
+:root {
+  height: 100%;
+  position: relative;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
