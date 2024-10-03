@@ -9,9 +9,9 @@ const LayoutDashboard = (props: { children: React.ReactNode }) => {
                 <SideBar className='bg-[#0CBBF0] w-80 h-screen hidden lg:block' />
                 <div className='bg-background h-full lg:rounded-3xl'>
                     <div className='w-full h-full'>
-                        <header className='h-16'>
+                        {/* <header className='h-16'>
                             <h1 className='text-2xl text-white'>Dreams Admin</h1>
-                        </header>
+                        </header> */}
                         {props.children}
                     </div>
                 </div>

@@ -1,0 +1,108 @@
+/* Container cho bảng */
+.overview-table-container {
+  height: 100vh;
+  width: 170vh;
+  padding: 20px;
+}
+
+/* CSS cho bảng */
+.overview-table {
+  width: 100%; /* Bảng chiếm hết chiều rộng của phần content */
+  height: 70%;
+  max-height: 200px;
+  border-collapse: collapse;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+.overview-table th, .overview-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+  height: 10px;
+}
+
+.overview-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+.overview-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.action-btn {
+  background-color: #418bfa;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  border-radius: 5px;
+  padding: 2px;
+}
+
+.action-btn:hover{
+  background-color: #0b5ed7;
+  color: #fff;
+}
+
+/* CSS cho phân trang */
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.page-btn {
+  background-color: #b9d7fc;
+  border: none;
+  margin: 0 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.page-btn:hover {
+  background-color: #ddd;
+}
+
+.user-modal {
+  background-color: white;
+  padding: 20px;
+  width: 400px;
+  margin: 0 auto;
+  border-radius: 8px;
+  position: relative;
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-btn {
+  background-color: #d9534f;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  background-color: #c9302c;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+}
+
+.modal-content p {
+  margin: 5px 0;
+}
