@@ -1,124 +1,3 @@
-// import React from "react";
-// import "./OverviewTable.css"; // Assuming your CSS is in this file
-
-// const UserReportPage = () => {
-//   // Sample data
-//   const data = [
-//     {
-//       id: 1,
-//       name: "Nicholas Patrick",
-//       follows: "2540.58 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/12/2010",
-//     },
-//     {
-//       id: 2,
-//       name: "Cordell Edwards",
-//       follows: "1567.80 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "03/10/2012",
-//     },
-//     {
-//       id: 3,
-//       name: "Derrick Spencer",
-//       follows: "1640.26 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/07/2011",
-//     },
-//     {
-//       id: 3,
-//       name: "Derrick Spencer",
-//       follows: "1640.26 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/07/2011",
-//     },
-//     {
-//       id: 3,
-//       name: "Derrick Spencer",
-//       follows: "1640.26 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/07/2011",
-//     },
-//     {
-//       id: 3,
-//       name: "Derrick Spencer",
-//       follows: "1640.26 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/07/2011",
-//     },
-//     {
-//       id: 3,
-//       name: "Derrick Spencer",
-//       follows: "1640.26 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/07/2011",
-//     },
-//     {
-//       id: 3,
-//       name: "Derrick Spencer",
-//       follows: "1640.26 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/07/2011",
-//     },
-//     {
-//       id: 3,
-//       name: "Derrick Spencer",
-//       follows: "1640.26 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/07/2011",
-//     },
-//     {
-//       id: 3,
-//       name: "Derrick Spencer",
-//       follows: "1640.26 Follows",
-//       email: "abc@gmail.com",
-//       createdDate: "02/07/2011",
-//     }
-//     // More rows here...
-//   ];
-
-//   return (
-//     <div className="overview-table-container">
-//       <h2>Top Featured Users</h2>
-//       <table className="overview-table">
-//         <thead>
-//           <tr>
-//             <th>STT</th>
-//             <th>Name</th>
-//             <th>Follows</th>
-//             <th>Mail</th>
-//             <th>Created Date</th>
-//             <th>Actions</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {data.map((user, index) => (
-//             <tr key={user.id}>
-//               <td>{index + 1}</td>
-//               <td>{user.name}</td>
-//               <td>{user.follows}</td>
-//               <td>{user.email}</td>
-//               <td>From {user.createdDate}</td>
-//               <td>
-//                 <button className="action-btn">View</button>
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-
-//       <div className="pagination">
-//         <button className="page-btn">{"<<"}</button>
-//         <button className="page-btn">5</button>
-//         <button className="page-btn">6</button>
-//         <button className="page-btn">7</button>
-//         <button className="page-btn">{">>"}</button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default UserReportPage;
 'use client';
 import React, { useState } from "react";
 import "./OverviewTable.css"; // Assuming your CSS is in this file
@@ -172,10 +51,9 @@ const UserReportPage: React.FC = () => {
         <thead>
           <tr>
             <th>STT</th>
-            <th>Name</th>
-            <th>Follows</th>
-            <th>Mail</th>
-            <th>Created Date</th>
+            <th>Reporter</th>
+            <th>Repoerted Person</th>
+            <th>Content</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -186,7 +64,6 @@ const UserReportPage: React.FC = () => {
               <td>{user.name}</td>
               <td>{user.follows}</td>
               <td>{user.email}</td>
-              <td>From {user.createdDate}</td>
               <td>
                 <button className="action-btn" onClick={() => handleViewClick(user)}>
                   View
