@@ -10,30 +10,30 @@ const UserReportPage = () => {
     const [data, setData] = useState(fakeDataUserReport);
     const [showDialog, setShowDialog] = useState(false);
 
-    const pageTotal = Math.ceil(data.length / 8);
+    const pageTotal = Math.ceil(data.length / 10);
     const [pageSelected, setPageSelected] = useState(1);
     const [indexS, setIndexS] = useState(0);
-    const [indexE, setIndexE] = useState(8);
+    const [indexE, setIndexE] = useState(data.length < 9 ? data.length : 9);
 
     const pagination = () => {
         const handlePrevious = () => {
-            if (pageSelected * 8 < data.length) {
-                setIndexE(indexE - 8);
+            if (pageSelected * 9 < data.length) {
+                setIndexE(indexE - 9);
             } else {
-                setIndexE(indexE - 8 + (pageSelected * 8 - data.length));
+                setIndexE(indexE - 9 + (pageSelected * 9 - data.length));
             }
             setPageSelected((prev) => prev - 1);
-            setIndexE(indexE - 8);
-            setIndexS(indexS - 8);
+            setIndexE(indexE - 9);
+            setIndexS(indexS - 9);
             console.log("prev", pageSelected, indexS, indexE);
         };
 
         const handleNext = () => {
             setPageSelected((prev) => prev + 1);
-            if (pageSelected * 8 < data.length) {
-                setIndexE((prev) => prev + 8);
+            if (pageSelected * 9 < data.length) {
+                setIndexE((prev) => prev + 9);
             } else setIndexE(data.length);
-            setIndexS(indexS + 8);
+            setIndexS(indexS + 9);
             console.log("next", pageSelected, indexS, indexE);
         };
 
@@ -65,12 +65,12 @@ const UserReportPage = () => {
                         key={page}
                         onClick={() => {
                             setPageSelected(page);
-                            if (page * 8 < data.length) {
-                                setIndexE(page * 8);
+                            if (page * 9 < data.length) {
+                                setIndexE(page * 9);
                             } else {
                                 setIndexE(data.length);
                             }
-                            setIndexS(page * 8 - 8);
+                            setIndexS(page * 9 - 9);
                         }}
                         className={`py-1 px-3 rounded-lg ${
                             page === pageSelected
@@ -182,52 +182,41 @@ const UserReportPage = () => {
 
     return (
         <div className="pl-12 pr-12 w-full">
-            <div className="flex w-full mb-4 border-[1px] border-[#C2D3FF] pt-2 pb-2 pr-5 pl-5">
-                <div className="w-1/6 text-center text-lg font-bold">Date</div>
-                <div className="w-1/6 text-center text-lg font-bold">
+            <div className="flex w-full mb-4 border-[1px] border-[#C2D3FF] py-2 px-5">
+                <div className="flex-1 text-center text-lg font-bold">Date</div>
+                <div className="flex-1 text-center text-lg font-bold">
                     Reporter
                 </div>
-                <div className="w-1/6 text-center text-lg font-bold">
+                <div className="flex-1 text-center text-lg font-bold">
                     Reported user
                 </div>
-                <div className="flex-1 text-center text-lg font-bold">
-                    Content
-                </div>
-                <div className="w-1/6 text-center text-lg font-bold">
-                    Actions
+                <div className="flex-[2] text-center text-lg font-bold">
+                    Reasons
                 </div>
             </div>
             <div className="flex flex-col gap-4">
                 {data.slice(indexS, indexE).map((item, index) => (
-                    <div
+                    <button
                         key={index}
                         className="flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#C2D3FF] rounded-2xl"
+                        onClick={() => {
+                            setShowDialog(true);
+                            setDataDialog(item);
+                        }}
                     >
-                        <div className="text-base font-regular text-[#797D8C] w-1/6 text-center">
+                        <div className="text-base font-regular text-[#797D8C] flex-[1] text-center">
                             {item.create_at}
                         </div>
-                        <div className="text-base font-regular text-[#797D8C] w-1/6 text-center truncate">
+                        <div className="text-base font-regular text-[#797D8C] flex-[1] text-center truncate">
                             {item.reporter}
                         </div>
-                        <div className="text-sm font-semibold text-[#797D8C] w-1/6 text-center truncate">
+                        <div className="text-sm font-semibold text-[#797D8C] flex-[1] text-center truncate">
                             {item.reported}
                         </div>
-                        <div className="text-sm font-regular text-[#797D8C] w-2/6 truncate pr-10">
+                        <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-left">
                             {item.content}
                         </div>
-                        <div className="flex w-1/6 justify-center">
-                            <button
-                                className="px-3 py-1 bg-[#0CBBF0] rounded-lg"
-                                onClick={() => {
-                                    setShowDialog(true);
-                                    setDataDialog(item);
-                                }}
-                            >
-                                <span className="text-[#fff]">View</span>
-                            </button>
-                            {/* <EllipsisVertical size={24} color="#0CBBF0" /> */}
-                        </div>
-                    </div>
+                    </button>
                 ))}
             </div>
             <div className="flex flex-row items-center justify-center my-5  ">
