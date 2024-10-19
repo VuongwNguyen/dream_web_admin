@@ -95,14 +95,16 @@ const PostReportPage = () => {
         reported: string;
         post_id: string;
         content: string;
+        desc: string;
         create_at: string;
         status: string;
     }
     const initialData: Report = {
         reporter: "",
         reported: "",
-        content: "",
         post_id: "",
+        content: "",
+        desc: "",
         create_at: "",
         status: "",
     };
@@ -149,6 +151,14 @@ const PostReportPage = () => {
                             </span>
                             <span className="text-base text-[#000] ml-10">
                                 {item.content}
+                            </span>
+                        </div>
+                        <div>
+                            <span className="text-base text-[#000] font-semibold">
+                                Description:
+                            </span>
+                            <span className="text-base text-[#000] ml-10">
+                                {item.desc}
                             </span>
                         </div>
                         <div>
@@ -231,6 +241,9 @@ const PostReportPage = () => {
                 <div className="flex-[4] text-center text-lg font-bold">
                     Reasons
                 </div>
+                <div className="flex-[3] text-center text-lg font-bold">
+                    Description
+                </div>
             </div>
 
             <div className="flex flex-col gap-4">
@@ -259,11 +272,14 @@ const PostReportPage = () => {
                         <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate">
                             {item.reported}
                         </div>
-                        <div className="text-sm font-semibold text-[#797D8C] flex-[2] text-center">
+                        <div className="text-sm font-semibold text-[#797D8C] flex-[2] text-center px-2">
                             {item.post_id}
                         </div>
-                        <div className="text-sm font-regular text-[#797D8C] flex-[4] text-center truncate">
+                        <div className="text-sm font-regular text-[#797D8C] flex-[4] text-center truncate px-5">
                             {item.content}
+                        </div>
+                        <div className="text-sm font-regular text-[#797D8C] flex-[3] text-center truncate pf-5">
+                            {item.desc}
                         </div>
                     </button>
                 ))}
@@ -284,6 +300,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },
@@ -292,6 +309,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },
@@ -300,6 +318,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },
@@ -308,6 +327,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },
@@ -316,6 +336,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },
@@ -324,6 +345,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },
@@ -332,6 +354,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },
@@ -340,6 +363,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },
@@ -348,6 +372,7 @@ const fakeDataPostReport = [
         reported: "Nguyễn Văn B",
         post_id: "670d38ba689da6509f770018",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
         status: "",
     },

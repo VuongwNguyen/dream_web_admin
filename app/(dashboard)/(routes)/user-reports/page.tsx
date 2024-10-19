@@ -94,13 +94,17 @@ const UserReportPage = () => {
         reporter: string;
         reported: string;
         content: string;
+        desc: string;
         create_at: string;
+        status: string;
     }
     const initialData: Report = {
         reporter: "",
         reported: "",
         content: "",
+        desc: "",
         create_at: "",
+        status: "",
     };
     const [dataDialog, setDataDialog] = useState(initialData);
     const dialog = (item: Report) => {
@@ -111,61 +115,107 @@ const UserReportPage = () => {
                     <h2 className="text-lg font-bold uppercase text-center">
                         Detail report
                     </h2>
-                    <div className="flex flex-row gap-[200px] items-center mb-4 mt-5">
-                        <div>
-                            <span className="text-base text-[#000] font-semibold">
-                                Reporter:
-                            </span>
-                            <span className="text-base text-[#000] ml-10">
-                                {item.reporter}
-                            </span>
+                    <div className="flex flex-col gap-2 my-5">
+                        <div className="flex flex-row gap-[200px] items-center">
+                            <div>
+                                <span className="text-base text-[#000] font-semibold">
+                                    Reporter:
+                                </span>
+                                <span className="text-base text-[#000] ml-10">
+                                    {item.reporter}
+                                </span>
+                            </div>
+                            <div>
+                                <span className="text-base text-[#000] font-semibold">
+                                    Reported user:
+                                </span>
+                                <span className="text-base text-[#000] ml-10">
+                                    {item.reported}
+                                </span>
+                            </div>
                         </div>
                         <div>
                             <span className="text-base text-[#000] font-semibold">
-                                Reported user:
+                                Content:
                             </span>
                             <span className="text-base text-[#000] ml-10">
-                                {item.reported}
+                                {item.content}
                             </span>
                         </div>
-                    </div>
-                    <div className="mb-4">
-                        <span className="text-base text-[#000] font-semibold">
-                            Content:
-                        </span>
-                        <span className="text-base text-[#000] ml-10">
-                            {item.content}
-                        </span>
-                    </div>
-                    <div className="mb-5">
-                        <span className="text-base text-[#000] font-semibold">
-                            Data of reported user:
-                        </span>
-                        <div className="w-full bg-[#e5e7e9] p-10 h-[400px] overflow-auto mt-2">
-                            <p>Log data of user reported</p>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipiscing elit. Phasellus eget facilisis
-                                ligula. Duis non nulla tellus. Nulla facilisi.
-                                Integer volutpat euismod ligula sed vestibulum.
-                                Praesent at leo id urna viverra vestibulum in
-                                quis erat.
-                            </p>
+                        <div>
+                            <span className="text-base text-[#000] font-semibold">
+                                Description:
+                            </span>
+                            <span className="text-base text-[#000] ml-10">
+                                {item.desc}
+                            </span>
                         </div>
+                        <div>
+                            <span className="text-base text-[#000] font-semibold">
+                                Data of reported user:
+                            </span>
+                            <div className="w-full bg-[#e5e7e9] p-10 h-[350px] overflow-auto mt-2">
+                                <p>Log data of user reported</p>
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur
+                                    adipiscing elit. Phasellus eget facilisis
+                                    ligula. Duis non nulla tellus. Nulla
+                                    facilisi. Integer volutpat euismod ligula
+                                    sed vestibulum. Praesent at leo id urna
+                                    viverra vestibulum in quis erat.
+                                </p>
+                            </div>
+                        </div>
+                        {!!item?.status && (
+                            <div>
+                                <span className="text-base text-[#000] font-semibold">
+                                    Status:
+                                </span>
+                                <span className="text-base text-[#000] ml-10">
+                                    {item.status}
+                                </span>
+                            </div>
+                        )}
                     </div>
                     <div className="flex justify-end gap-5">
-                        <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded">
+                        <button
+                            className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded"
+                            onClick={() => {
+                                item.status = "Warming";
+                                setShowDialog(false);
+                            }}
+                        >
                             Warning
                         </button>
 
-                        <button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded">
+                        <button
+                            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+                            onClick={() => {
+                                item.status = "Blocking";
+                                setShowDialog(false);
+                            }}
+                        >
                             Blocking
                         </button>
 
-                        <button className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded">
+                        <button
+                            className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded"
+                            onClick={() => {
+                                item.status = "Permanent Ban";
+                                setShowDialog(false);
+                            }}
+                        >
                             Permanent Ban
                         </button>
-
+                        <button
+                            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
+                            onClick={() => {
+                                item.status = "Dismiss";
+                                setShowDialog(false);
+                            }}
+                        >
+                            Dismiss
+                        </button>
                         <button
                             className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
                             onClick={() => {
@@ -193,12 +243,22 @@ const UserReportPage = () => {
                 <div className="flex-[2] text-center text-lg font-bold">
                     Reasons
                 </div>
+                <div className="flex-[2] text-center text-lg font-bold">
+                    Description
+                </div>
             </div>
             <div className="flex flex-col gap-4">
                 {data.slice(indexS, indexE).map((item, index) => (
                     <button
                         key={index}
-                        className="flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#C2D3FF] rounded-2xl"
+                        className={`flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] rounded-2xl 
+                            ${
+                                item?.status
+                                    ? item.status === "Dismiss"
+                                        ? "border-green-500"
+                                        : "border-red-500"
+                                    : "border-[#C2D3FF]"
+                            }`}
                         onClick={() => {
                             setShowDialog(true);
                             setDataDialog(item);
@@ -213,8 +273,11 @@ const UserReportPage = () => {
                         <div className="text-sm font-semibold text-[#797D8C] flex-[1] text-center truncate">
                             {item.reported}
                         </div>
-                        <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-left">
+                        <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate px-5 text-left">
                             {item.content}
+                        </div>
+                        <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate ">
+                            {item.desc}
                         </div>
                     </button>
                 ))}
@@ -234,97 +297,127 @@ const fakeDataUserReport = [
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abcdefg@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "a@gmail.com",
         reported: "1@gmail.com",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
+        desc: "abc",
         create_at: "02/12/2010",
+        status: "",
     },
 ];
