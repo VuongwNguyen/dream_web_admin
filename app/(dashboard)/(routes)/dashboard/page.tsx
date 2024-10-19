@@ -10,7 +10,7 @@ const DashboardPage = () => {
     const [data, setData] = useState(fakeDataTopUser);
     return (
         <div className='pl-12 pr-12 w-full'>
-            <div className='pt-8 pb-8'>
+            <div className='pb-8'>
                 <span className='font-bold text-[20px]'>Top Featured Users</span>
             </div>
             <div className='flex flex-col gap-4'>
