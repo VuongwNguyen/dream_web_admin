@@ -1,50 +1,133 @@
 "use client";
-import {
-    EllipsisVertical,
-    SquareChevronLeft,
-    SquareChevronRight,
-} from "lucide-react";
+import { SquareChevronLeft, SquareChevronRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import AxiosInstance from "../../../../constants/AxiosInstance";
+import moment from "moment";
 
 const PostReportPage = () => {
-    const [data, setData] = useState(fakeDataPostReport);
+    const [loading, setLoading] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
 
-    const pageTotal = Math.ceil(data.length / 9);
+    // const windowHeight = window.innerHeight
+    interface Report {
+        _id: string;
+        reason: string;
+        description: string;
+        createAt: string;
+        status: string;
+        reported_user: {
+            _id: string;
+            fullname: string;
+            email: string;
+        };
+        judger: {
+            _id: string;
+            fullname: string;
+            email: string;
+        };
+        reported_content: {
+            title: string;
+            content: string;
+            images: [string];
+            videos: [string];
+            tagUsers: [string];
+            hashtags: [string];
+            author: {
+                _id: string;
+                fullname: string;
+                email: string;
+            };
+        };
+    }
+    const initialData: Report = {
+        _id: "",
+        reason: "",
+        description: "",
+        createAt: "",
+        status: "",
+        reported_user: {
+            _id: "",
+            fullname: "",
+            email: "",
+        },
+        judger: {
+            _id: "",
+            fullname: "",
+            email: "",
+        },
+        reported_content: {
+            title: "",
+            content: "",
+            images: [""],
+            videos: [""],
+            tagUsers: [""],
+            hashtags: [""],
+            author: {
+                _id: "",
+                fullname: "",
+                email: "",
+            },
+        },
+    };
+    const [data, setData] = useState([initialData]);
+    const [maxPage, setMaxPage] = useState(1);
     const [pageSelected, setPageSelected] = useState(1);
-    const [indexS, setIndexS] = useState(0);
-    const [indexE, setIndexE] = useState(data.length < 9 ? data.length : 9);
+    interface BodyJudge {
+        report_id: string;
+        status: string;
+    }
+    const handleReport = async ({ report_id, status }: BodyJudge) => {
+        try {
+            const response = await AxiosInstance().put("/report/report", {
+                report_id,
+                status,
+            });
+            alert("Cập nhật trạng thái thành công!");
+            fetchData(pageSelected)
+        } catch (error) {
+            alert("Cập nhật trạng thái thất bại!");
+            console.error("Error handling report:", error);
+        }
+    };
+    const fetchData = async (pageNumber: number) => {
+        try {
+            setLoading(true);
+            const response = await AxiosInstance().get(
+                `/report/reports?report_type=post&_limit=8&_page=${pageNumber}`
+            );
+            setData(response.data.list);
+            setMaxPage(response.data.page.maxPage);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        fetchData(pageSelected);
+    }, []);
 
     const pagination = () => {
         const handlePrevious = () => {
-            if (pageSelected * 9 < data.length) {
-                setIndexE(indexE - 9);
-            } else {
-                setIndexE(indexE - 9 + (pageSelected * 9 - data.length));
-            }
+            fetchData(pageSelected - 1);
+
             setPageSelected((prev) => prev - 1);
-            setIndexE(indexE - 9);
-            setIndexS(indexS - 9);
-            console.log("prev", pageSelected, indexS, indexE);
         };
 
         const handleNext = () => {
+            fetchData(pageSelected + 1);
+
             setPageSelected((prev) => prev + 1);
-            if (pageSelected * 9 < data.length) {
-                setIndexE((prev) => prev + 9);
-            } else setIndexE(data.length);
-            setIndexS(indexS + 9);
-            console.log("next", pageSelected, indexS, indexE);
         };
 
         const getVisiblePages = () => {
-            if (pageTotal <= 3) {
-                return Array.from({ length: pageTotal }, (_, i) => i + 1);
+            if (maxPage <= 3) {
+                return Array.from({ length: maxPage }, (_, i) => i + 1);
             }
             if (pageSelected === 1) {
                 return [1, 2, 3];
-            } else if (pageSelected === pageTotal) {
-                return [pageTotal - 2, pageTotal - 1, pageTotal];
+            } else if (pageSelected === maxPage) {
+                return [maxPage - 2, maxPage - 1, maxPage];
             } else {
                 return [pageSelected - 1, pageSelected, pageSelected + 1];
             }
@@ -65,12 +148,7 @@ const PostReportPage = () => {
                         key={page}
                         onClick={() => {
                             setPageSelected(page);
-                            if (page * 9 < data.length) {
-                                setIndexE(page * 9);
-                            } else {
-                                setIndexE(data.length);
-                            }
-                            setIndexS(page * 9 - 9);
+                            fetchData(page);
                         }}
                         className={`py-1 px-3 rounded-lg ${
                             page === pageSelected
@@ -82,31 +160,13 @@ const PostReportPage = () => {
                     </button>
                 ))}
 
-                {pageTotal > 3 && (
+                {maxPage > 3 && (
                     <button onClick={handleNext}>
                         <SquareChevronRight size={30} color="#0CBBF0" />
                     </button>
                 )}
             </div>
         );
-    };
-    interface Report {
-        reporter: string;
-        reported: string;
-        post_id: string;
-        content: string;
-        desc: string;
-        create_at: string;
-        status: string;
-    }
-    const initialData: Report = {
-        reporter: "",
-        reported: "",
-        post_id: "",
-        content: "",
-        desc: "",
-        create_at: "",
-        status: "",
     };
     const [dataDialog, setDataDialog] = useState(initialData);
     const dialog = (item: Report) => {
@@ -124,7 +184,7 @@ const PostReportPage = () => {
                                 Reporter:
                             </span>
                             <span className="text-base text-[#000] ml-10">
-                                {item.reporter}
+                                {item.reported_user.email}
                             </span>
                         </div>
                         <div className="flex flex-row gap-[200px] items-center ">
@@ -133,7 +193,7 @@ const PostReportPage = () => {
                                     Reported user:
                                 </span>
                                 <span className="text-base text-[#000] ml-10">
-                                    {item.reported}
+                                    {item.reported_content.author.email}
                                 </span>
                             </div>
                             <div>
@@ -141,16 +201,16 @@ const PostReportPage = () => {
                                     Post ID:
                                 </span>
                                 <span className="text-base text-[#000] ml-10">
-                                    {item.post_id}
+                                    {item._id}
                                 </span>
                             </div>
                         </div>
                         <div>
                             <span className="text-base text-[#000] font-semibold">
-                                Content:
+                                Reason:
                             </span>
                             <span className="text-base text-[#000] ml-10">
-                                {item.content}
+                                {item.reason}
                             </span>
                         </div>
                         <div>
@@ -158,23 +218,62 @@ const PostReportPage = () => {
                                 Description:
                             </span>
                             <span className="text-base text-[#000] ml-10">
-                                {item.desc}
+                                {item.description}
                             </span>
                         </div>
                         <div>
                             <span className="text-base text-[#000] font-semibold">
                                 Data of reported post:
                             </span>
-                            <div className="w-full bg-[#e5e7e9] p-10 h-[350px] overflow-auto mt-2">
-                                <p>Log data of post reported</p>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Phasellus eget facilisis
-                                    ligula. Duis non nulla tellus. Nulla
-                                    facilisi. Integer volutpat euismod ligula
-                                    sed vestibulum. Praesent at leo id urna
-                                    viverra vestibulum in quis erat.
-                                </p>
+                            <div className="w-full bg-[#e5e7e9] p-4 max-h-[300px] overflow-auto mt-2 flex flex-col gap-[5px]">
+                                <div className="flex flex-row gap-[10px]">
+                                    <span className="text-base text-[#000] font-medium">
+                                        Title:
+                                    </span>
+                                    <span>{item.reported_content.title}</span>
+                                </div>
+
+                                <div className="flex flex-row gap-[10px]">
+                                    <span className="text-base text-[#000] font-medium">
+                                        Content:
+                                    </span>
+                                    <span>{item.reported_content.content}</span>
+                                </div>
+
+                                {item?.reported_content?.images?.length > 0 && (
+                                    <div>
+                                        <span className="text-base text-[#000] font-medium">
+                                            Images:
+                                        </span>
+                                        <div className="grid grid-cols-6 gap-4">
+                                            {item?.reported_content?.images.map(
+                                                (image, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={image}
+                                                        alt={`Image ${index}`}
+                                                        className="w-32 h-32 object-coverrounded-md"
+                                                    />
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                                {item?.reported_content?.hashtags?.length >
+                                    0 && (
+                                    <div className="flex flex-row gap-[10px]">
+                                        <span className="text-base text-[#000] font-medium">
+                                            Hashtag:
+                                        </span>
+                                        <div>
+                                            {item?.reported_content?.hashtags.map(
+                                                (tag, index) => (
+                                                    <span>#{tag} </span>
+                                                )
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {!!item?.status && (
@@ -187,12 +286,25 @@ const PostReportPage = () => {
                                 </span>
                             </div>
                         )}
+                        {item?.status !== "pending" && (
+                            <div>
+                                <span className="text-base text-[#000] font-semibold">
+                                    Judger:
+                                </span>
+                                <span className="text-base text-[#000] ml-10">
+                                    {item.judger.email}
+                                </span>
+                            </div>
+                        )}
                     </div>
                     <div className="flex justify-end gap-5">
                         <button
                             className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
                             onClick={() => {
-                                item.status = "Remove post";
+                                handleReport({
+                                    report_id: item._id,
+                                    status: "resolved",
+                                });
                                 setShowDialog(false);
                             }}
                         >
@@ -201,7 +313,10 @@ const PostReportPage = () => {
                         <button
                             className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
                             onClick={() => {
-                                item.status = "Dismiss";
+                                handleReport({
+                                    report_id: item._id,
+                                    status: "rejected",
+                                });
                                 setShowDialog(false);
                             }}
                         >
@@ -238,142 +353,66 @@ const PostReportPage = () => {
                     Post ID
                 </div>
 
-                <div className="flex-[4] text-center text-lg font-bold">
+                <div className="flex-[2] text-center text-lg font-bold">
                     Reasons
                 </div>
-                <div className="flex-[3] text-center text-lg font-bold">
+                <div className="flex-[2] text-center text-lg font-bold">
                     Description
                 </div>
             </div>
-
-            <div className="flex flex-col gap-4">
-                {data.slice(indexS, indexE).map((item, index) => (
-                    <button
-                        key={index}
-                        className={`flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] rounded-2xl 
+            {loading ? (
+                <div className=" mt-50  text-center">Loading...</div>
+            ) : (
+                <div>
+                    <div className="flex flex-col gap-4">
+                        {data.map((item, index) => (
+                            <button
+                                key={index}
+                                className={`flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] rounded-2xl 
                             ${
-                                item?.status
-                                    ? item.status === "Dismiss"
-                                        ? "border-green-500"
-                                        : "border-red-500"
+                                item?.status === "rejected"
+                                    ? "border-green-500"
+                                    : item?.status === "resolved"
+                                    ? "border-red-500"
                                     : "border-[#C2D3FF]"
-                            }`}
-                        onClick={() => {
-                            setShowDialog(true);
-                            setDataDialog(item);
-                        }}
-                    >
-                        <div className="text-base font-regular text-[#797D8C] flex-[1] text-left">
-                            {item.create_at}
-                        </div>
-                        <div className="text-base font-regular text-[#797D8C] flex-[2] text-center truncate">
-                            {item.reporter}
-                        </div>
-                        <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate">
-                            {item.reported}
-                        </div>
-                        <div className="text-sm font-semibold text-[#797D8C] flex-[2] text-center px-2">
-                            {item.post_id}
-                        </div>
-                        <div className="text-sm font-regular text-[#797D8C] flex-[4] text-center truncate px-5">
-                            {item.content}
-                        </div>
-                        <div className="text-sm font-regular text-[#797D8C] flex-[3] text-center truncate pf-5">
-                            {item.desc}
-                        </div>
-                    </button>
-                ))}
-            </div>
-            <div className="flex flex-row items-center justify-center my-5  ">
-                {pagination()}
-            </div>
+                            }
+                            `}
+                                onClick={() => {
+                                    setShowDialog(true);
+                                    setDataDialog(item);
+                                }}
+                            >
+                                <div className="text-base font-regular text-[#797D8C] flex-[1] text-left">
+                                    {moment(item.createAt).format("DD/MM/YYYY")}
+                                </div>
+                                <div className="text-base font-regular text-[#797D8C] flex-[2] text-center truncate">
+                                    {item?.reported_user.email}
+                                </div>
+                                <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate">
+                                    {item.reported_content.author.email}
+                                </div>
+                                <div className="text-sm font-semibold text-[#797D8C] flex-[2] text-center px-2">
+                                    {item._id}
+                                </div>
+                                <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate px-5">
+                                    {item.reason}
+                                </div>
+                                <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate pf-5">
+                                    {!!item.description
+                                        ? item.description
+                                        : "Null"}
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                    <div className="fixed bottom-2 left-1/2 transform -translate-x-1/2 ">
+                        {pagination()}
+                    </div>
+                </div>
+            )}
             {showDialog && dialog(dataDialog)}
         </div>
     );
 };
 
 export default PostReportPage;
-
-const fakeDataPostReport = [
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "Nguyễn Văn A",
-        reported: "Nguyễn Văn B",
-        post_id: "670d38ba689da6509f770018",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-];
