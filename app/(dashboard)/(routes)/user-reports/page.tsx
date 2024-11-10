@@ -246,6 +246,7 @@ const UserReportPage = () => {
                 <div className="flex-[2] text-center text-lg font-bold">
                     Description
                 </div>
+
             </div>
             <div className="flex flex-col gap-4">
                 {data.slice(indexS, indexE).map((item, index) => (
