@@ -83,7 +83,7 @@ const PostReportPage = () => {
                 status,
             });
             alert("Cập nhật trạng thái thành công!");
-            fetchData(pageSelected)
+            fetchData(pageSelected);
         } catch (error) {
             alert("Cập nhật trạng thái thất bại!");
             console.error("Error handling report:", error);
@@ -170,6 +170,7 @@ const PostReportPage = () => {
     };
     const [dataDialog, setDataDialog] = useState(initialData);
     const dialog = (item: Report) => {
+        const handleDisable = item.status !== "pending";
         return (
             <>
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-1"></div>
@@ -299,7 +300,10 @@ const PostReportPage = () => {
                     </div>
                     <div className="flex justify-end gap-5">
                         <button
-                            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+                            disabled={handleDisable}
+                            className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${
+                                handleDisable && "opacity-50"
+                            }`}
                             onClick={() => {
                                 handleReport({
                                     report_id: item._id,
@@ -311,7 +315,10 @@ const PostReportPage = () => {
                             Remove post
                         </button>
                         <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
+                            disabled={handleDisable}
+                            className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${
+                                handleDisable && "opacity-50"
+                            }`}
                             onClick={() => {
                                 handleReport({
                                     report_id: item._id,
