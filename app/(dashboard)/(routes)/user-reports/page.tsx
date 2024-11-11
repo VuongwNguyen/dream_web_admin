@@ -163,28 +163,10 @@ const UserReportPage = () => {
                     <h2 className="text-lg font-bold uppercase text-center">
                         Detail report
                     </h2>
-                    <div className="flex flex-col gap-2 my-5">
-                        <div className="flex flex-row gap-[200px] items-center">
-                            <div>
-                                <span className="text-base text-[#000] font-semibold">
-                                    Reporter:
-                                </span>
-                                <span className="text-base text-[#000] ml-10">
-                                    {item.reporter}
-                                </span>
-                            </div>
-                            <div>
-                                <span className="text-base text-[#000] font-semibold">
-                                    Reported user:
-                                </span>
-                                <span className="text-base text-[#000] ml-10">
-                                    {item.reported}
-                                </span>
-                            </div>
-                        </div>
+                    <div className="flex flex-row gap-[200px] items-center mb-4 mt-5">
                         <div>
                             <span className="text-base text-[#000] font-semibold">
-                                Content:
+                                Reporter:
                             </span>
                             <span className="text-base text-[#000] ml-10">
                                 {item.reported_user.fullname}
@@ -192,7 +174,7 @@ const UserReportPage = () => {
                         </div>
                         <div>
                             <span className="text-base text-[#000] font-semibold">
-                                Description:
+                                Reported user:
                             </span>
                             <span className="text-base text-[#000] ml-10">
                                 {item.reported_content.email}
@@ -222,16 +204,6 @@ const UserReportPage = () => {
                                 quis erat.
                             </p>
                         </div>
-                        {!!item?.status && (
-                            <div>
-                                <span className="text-base text-[#000] font-semibold">
-                                    Status:
-                                </span>
-                                <span className="text-base text-[#000] ml-10">
-                                    {item.status}
-                                </span>
-                            </div>
-                        )}
                     </div>
                     <div className="flex justify-end gap-5">
                 <div className='flex  items-center gap-10'>
@@ -285,10 +257,6 @@ const UserReportPage = () => {
                 <div className="flex-[2] text-center text-lg font-bold">
                     Reasons
                 </div>
-                <div className="flex-[2] text-center text-lg font-bold">
-                    Description
-                </div>
-
             </div>
             <div className="flex flex-col gap-4">
                 {(data && data.length > 0)&& data.slice(indexS, indexE).map((item, index) => {
@@ -340,127 +308,97 @@ const fakeDataUserReport = [
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abcdefg@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "a@gmail.com",
         reported: "1@gmail.com",
         content: "This user has violated community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content: "This user has violated community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
     {
         reporter: "abc@gmail.com",
         reported: "123@gmail.com",
         content:
             "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
         create_at: "02/12/2010",
-        status: "",
     },
 ];
