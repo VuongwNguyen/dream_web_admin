@@ -35,9 +35,4 @@ export const NAVIGATIONS = [
         url: "/admin-setting",
         slug: "admin-setting",
     },
-    {
-        title: "Login",
-        url: "/login",
-        slug: "login",
-    },
 ];
