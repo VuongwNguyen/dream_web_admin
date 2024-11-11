@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Bell, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -11,15 +11,21 @@ import {
     DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import Cookies from "js-cookie";
-
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const fullname = Cookies.get("fullname") || "Account";
-    const avatar = Cookies.get("avatar");
-
+    const [fullname, setFullname] = useState("Username");
+    const [avatar, setAvatar] = useState(
+        "https://i.pinimg.com/564x/b4/c9/e6/b4c9e629c472e0b7ed57268384d09e5f.jpg"
+    );
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
+    useEffect(() => {
+        const name = Cookies.get("fullname") ?? "";
+        const avt = Cookies.get("avatar") ?? "";
+        setAvatar(avt);
+        setFullname(name);
+    }, []);
 
     const handleLogout = () => {
         alert("You have been logged out!");
