@@ -1,12 +1,11 @@
 "use client";
-import axios from "axios";
 import {
     EllipsisVertical,
     SquareChevronLeft,
     SquareChevronRight,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import  AxiosInstance from "../../../config/axiosInstance";
+import  AxiosInstance from "@/constants/AxiosInstance";
 import { Select } from "@radix-ui/react-select";
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -24,6 +23,7 @@ const UserReportPage = () => {
     useEffect(() => {
         AxiosInstance().get("/report/reports?report_type=user")
         .then((res) => {
+                console.log(res.data.list);
                 setData(res.data.list)
             });
     }, []);
@@ -259,9 +259,10 @@ const UserReportPage = () => {
                 </div>
             </div>
             <div className="flex flex-col gap-4">
-                {(data && data.length > 0)&& data.slice(indexS, indexE).map((item, index) => {
+                {(data && data.length > 0)&& data.map((item, index) => {
                     return (
                         <button
+                            disabled = {item.status === "pending" ? false : true}
                             key={index}
                             className = { 
                                 item.status === "pending" 
@@ -289,7 +290,7 @@ const UserReportPage = () => {
                     <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-left">
                         {item.reason}
                     </div>
-                </button>
+                        </button>
                     )
                 })}
             </div>
@@ -302,103 +303,3 @@ const UserReportPage = () => {
 };
 
 export default UserReportPage;
-
-const fakeDataUserReport = [
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abcdefg@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "a@gmail.com",
-        reported: "1@gmail.com",
-        content: "This user has violated community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        create_at: "02/12/2010",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        create_at: "02/12/2010",
-    },
-];
