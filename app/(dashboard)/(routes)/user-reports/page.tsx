@@ -142,8 +142,6 @@ const UserReportPage = () => {
                     today = null
                     break;
             }
-            console.log(today);
-            console.log(judge);
             
             const body = {
                 report_id: item._id,
@@ -153,7 +151,7 @@ const UserReportPage = () => {
             AxiosInstance().put('/report/report',body)
                 .then((res) => {
                     setShowDialog(false);                    
-                    setData(data.filter((i) => i._id !== item._id));
+                    setData(data);
                 })
         };
         return (
@@ -211,6 +209,7 @@ const UserReportPage = () => {
                         <span className='text-lg font-semibold'>Date of judge</span>
                     </div>
                     <Select 
+                        disabled = {item.status === "pending" ? false : true}
                         // value={newAdmin.role} 
                         onValueChange={(value) => setJudge(value)}
                     >
@@ -227,7 +226,10 @@ const UserReportPage = () => {
                         </SelectContent>
                     </Select>
                 </div>
-                <button onClick={() => handleRoleChange()} className="bg-green-400 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded">
+                <button
+                    disabled = {item.status === "pending" ? false : true}
+                    onClick={() => handleRoleChange()} 
+                    className={item.status === "pending" ?  "bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded" : "bg-green-400 text-white font-semibold py-2 px-4 rounded"}>
                     Handle
                 </button>
                 <button
@@ -262,7 +264,6 @@ const UserReportPage = () => {
                 {(data && data.length > 0)&& data.map((item, index) => {
                     return (
                         <button
-                            disabled = {item.status === "pending" ? false : true}
                             key={index}
                             className = { 
                                 item.status === "pending" 
