@@ -1,43 +1,62 @@
-'use client'
-import React, { useState } from 'react'
-import { Input } from './ui/input'
-import { Bell, Search } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { DropdownMenu, DropdownMenuLabel } from './ui/dropdown-menu'
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
-
+"use client";
+import React, { useEffect, useState } from "react";
+import { Input } from "./ui/input";
+import { Bell, Search } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { DropdownMenu, DropdownMenuLabel } from "./ui/dropdown-menu";
+import {
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import Cookies from "js-cookie";
 const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
-
+    const [fullname, setFullname] = useState("Username");
+    const [avatar, setAvatar] = useState(
+        "https://i.pinimg.com/564x/b4/c9/e6/b4c9e629c472e0b7ed57268384d09e5f.jpg"
+    );
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
+    useEffect(() => {
+        const name = Cookies.get("fullname") ?? "";
+        const avt = Cookies.get("avatar") ?? "";
+        setAvatar(avt);
+        setFullname(name);
+    }, []);
 
     const handleLogout = () => {
-        alert('You have been logged out!');
-        // Thêm logic logout, ví dụ như chuyển hướng đến trang đăng xuất:
-        // router.push('/logout');
+        alert("You have been logged out!");
+        Cookies.remove("token");
+        Cookies.remove("role");
+        Cookies.remove("fullname");
+        Cookies.remove("avatar");
+        window.location.href = "login";
     };
     return (
-        <div className='w-full h-20 pl-14 pr-14 pt-7 pb-7 mb-8'>
-            <div className='flex justify-between items-center'>
-                <div className='text-3xl font-bold'>Overview</div>
-                <div className='flex items-center gap-10'>
-                    <div className='relative w-[412px]'>
+        <div className="w-full h-20 pl-14 pr-14 pt-7 pb-7 mb-8">
+            <div className="flex justify-between items-center">
+                <div className="text-3xl font-bold">Overview</div>
+                <div className="flex items-center gap-10">
+                    <div className="relative w-[412px]">
                         <Input
-                            className='rounded-3xl bg-[#D9F6FF] placeholder:text-[#0cbbf0] focus-visible:outline-none focus-visible:outline-[#0cbbf0]'
-                            type='search'
-                            placeholder='Search'
+                            className="rounded-3xl bg-[#D9F6FF] placeholder:text-[#0cbbf0] focus-visible:outline-none focus-visible:outline-[#0cbbf0]"
+                            type="search"
+                            placeholder="Search"
                         />
-                        <Search className='absolute right-3 top-2'
+                        <Search
+                            className="absolute right-3 top-2"
                             size={24}
-                            color='#0CBBF0' />
+                            color="#0CBBF0"
+                        />
                     </div>
-                    <Bell size={24} color='#0cbbf0' />
+                    <Bell size={24} color="#0cbbf0" />
 
-                    <div className='flex gap-2'>
+                    <div className="flex gap-2">
                         <Avatar>
-                            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                            <AvatarImage src={avatar} alt="@shadcn" />
                             <AvatarFallback>CN</AvatarFallback>
                         </Avatar>
                         <div className="flex items-center justify-center">
@@ -47,7 +66,7 @@ const Header = () => {
                                     className="inline-flex justify-center w-full"
                                     onClick={toggleDropdown}
                                 >
-                                    Account
+                                    {fullname ? fullname : ""}
                                     <svg
                                         className="-mr-1 ml-2 h-5 w-5"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +121,7 @@ const Header = () => {
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Header
+export default Header;

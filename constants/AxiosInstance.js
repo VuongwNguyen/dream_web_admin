@@ -1,14 +1,13 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const AxiosInstance = (contentType = "application/json") => {
     const axiosInstance = axios.create({
-        baseURL: "http://192.168.100.234:8012/api",
+        baseURL: "https://1699-2402-800-637d-9a2f-ac7e-a196-ff5-349a.ngrok-free.app/api",
     });
-
+    const token = Cookies.get("token");
     axiosInstance.interceptors.request.use(
         async (config) => {
-            const token =
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjcxZTZiNWJlZjg3YWQzYjkzYWRiMDc2IiwiaWF0IjoxNzMxMjM4MDQ2LCJleHAiOjE3MzM4MzAwNDZ9.AYYadtZXyecQHon3aBP1q3_JHgnJh3LyUGkWsDdJOks";
             config.headers = {
                 Authorization: `Bearer ${token}`,
                 Accept: "application/json",
