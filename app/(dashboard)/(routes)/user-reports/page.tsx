@@ -5,15 +5,28 @@ import {
     SquareChevronRight,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import  AxiosInstance from "@/constants/AxiosInstance";
+import { Select } from "@radix-ui/react-select";
+import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const UserReportPage = () => {
-    const [data, setData] = useState(fakeDataUserReport);
+    //useState Report[]
+    const [data, setData]  = useState<Report[]>([]);
     const [showDialog, setShowDialog] = useState(false);
 
-    const pageTotal = Math.ceil(data.length / 10);
+    const pageTotal = Math.ceil((data?.length || 0) / 10);
     const [pageSelected, setPageSelected] = useState(1);
     const [indexS, setIndexS] = useState(0);
-    const [indexE, setIndexE] = useState(data.length < 9 ? data.length : 9);
+    const [indexE, setIndexE] = useState(data?.length < 9 ? data?.length : 9);
+    const [judge, setJudge] = useState("0");
+
+    useEffect(() => {
+        AxiosInstance().get("/report/reports?report_type=user")
+        .then((res) => {
+                console.log(res.data.list);
+                setData(res.data.list)
+            });
+    }, []);
 
     const pagination = () => {
         const handlePrevious = () => {
@@ -91,23 +104,56 @@ const UserReportPage = () => {
         );
     };
     interface Report {
-        reporter: string;
-        reported: string;
-        content: string;
-        desc: string;
-        create_at: string;
+        _id: string;
+        reason: string;
         status: string;
+        description: string;
+        createdAt: string;
+        reported_user: any;
+        reported_content: any
     }
     const initialData: Report = {
-        reporter: "",
-        reported: "",
-        content: "",
-        desc: "",
-        create_at: "",
+        _id: "",
+        reason: "",
         status: "",
+        description: "",
+        createdAt: "",
+        reported_user: {},
+        reported_content: {}
     };
     const [dataDialog, setDataDialog] = useState(initialData);
     const dialog = (item: Report) => {
+        const handleRoleChange = () => {
+            let today: Date | null = new Date();
+            switch (judge) {
+                case "1":
+                    today.setDate(today.getDate() + 1);
+                    break;
+                case "2":
+                    today.setDate(today.getDate() + 3);
+                    break;
+                case "3":
+                    today.setDate(today.getDate() + 7);
+                    break;
+                case "4":
+                    today.setDate(today.getDate() + 30);
+                    break;
+                case "5":    
+                    today = null
+                    break;
+            }
+            
+            const body = {
+                report_id: item._id,
+                status: judge === "0" ? "rejected" : "resolved",
+                date_of_judge: today
+            }
+            AxiosInstance().put('/report/report',body)
+                .then((res) => {
+                    setShowDialog(false);                    
+                    setData(data);
+                })
+        };
         return (
             <>
                 <div className="fixed inset-0 bg-black bg-opacity-50 z-1"></div>
@@ -115,115 +161,85 @@ const UserReportPage = () => {
                     <h2 className="text-lg font-bold uppercase text-center">
                         Detail report
                     </h2>
-                    <div className="flex flex-col gap-2 my-5">
-                        <div className="flex flex-row gap-[200px] items-center">
-                            <div>
-                                <span className="text-base text-[#000] font-semibold">
-                                    Reporter:
-                                </span>
-                                <span className="text-base text-[#000] ml-10">
-                                    {item.reporter}
-                                </span>
-                            </div>
-                            <div>
-                                <span className="text-base text-[#000] font-semibold">
-                                    Reported user:
-                                </span>
-                                <span className="text-base text-[#000] ml-10">
-                                    {item.reported}
-                                </span>
-                            </div>
-                        </div>
+                    <div className="flex flex-row gap-[200px] items-center mb-4 mt-5">
                         <div>
                             <span className="text-base text-[#000] font-semibold">
-                                Content:
+                                Reporter:
                             </span>
                             <span className="text-base text-[#000] ml-10">
-                                {item.content}
+                                {item.reported_user.fullname}
                             </span>
                         </div>
                         <div>
                             <span className="text-base text-[#000] font-semibold">
-                                Description:
+                                Reported user:
                             </span>
                             <span className="text-base text-[#000] ml-10">
-                                {item.desc}
+                                {item.reported_content.email}
                             </span>
                         </div>
-                        <div>
-                            <span className="text-base text-[#000] font-semibold">
-                                Data of reported user:
-                            </span>
-                            <div className="w-full bg-[#e5e7e9] p-10 h-[350px] overflow-auto mt-2">
-                                <p>Log data of user reported</p>
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipiscing elit. Phasellus eget facilisis
-                                    ligula. Duis non nulla tellus. Nulla
-                                    facilisi. Integer volutpat euismod ligula
-                                    sed vestibulum. Praesent at leo id urna
-                                    viverra vestibulum in quis erat.
-                                </p>
-                            </div>
+                    </div>
+                    <div className="mb-4">
+                        <span className="text-base text-[#000] font-semibold">
+                            Content:
+                        </span>
+                        <span className="text-base text-[#000] ml-10">
+                            {item.reason}
+                        </span>
+                    </div>
+                    <div className="mb-5">
+                        <span className="text-base text-[#000] font-semibold">
+                            Data of reported user:
+                        </span>
+                        <div className="w-full bg-[#e5e7e9] p-10 h-[400px] overflow-auto mt-2">
+                            <p>Log data of user reported</p>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit. Phasellus eget facilisis
+                                ligula. Duis non nulla tellus. Nulla facilisi.
+                                Integer volutpat euismod ligula sed vestibulum.
+                                Praesent at leo id urna viverra vestibulum in
+                                quis erat.
+                            </p>
                         </div>
-                        {!!item?.status && (
-                            <div>
-                                <span className="text-base text-[#000] font-semibold">
-                                    Status:
-                                </span>
-                                <span className="text-base text-[#000] ml-10">
-                                    {item.status}
-                                </span>
-                            </div>
-                        )}
                     </div>
                     <div className="flex justify-end gap-5">
-                        <button
-                            className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded"
-                            onClick={() => {
-                                item.status = "Warming";
-                                setShowDialog(false);
-                            }}
-                        >
-                            Warning
-                        </button>
-
-                        <button
-                            className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
-                            onClick={() => {
-                                item.status = "Blocking";
-                                setShowDialog(false);
-                            }}
-                        >
-                            Blocking
-                        </button>
-
-                        <button
-                            className="bg-black hover:bg-gray-800 text-white font-semibold py-2 px-4 rounded"
-                            onClick={() => {
-                                item.status = "Permanent Ban";
-                                setShowDialog(false);
-                            }}
-                        >
-                            Permanent Ban
-                        </button>
-                        <button
-                            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded"
-                            onClick={() => {
-                                item.status = "Dismiss";
-                                setShowDialog(false);
-                            }}
-                        >
-                            Dismiss
-                        </button>
-                        <button
-                            className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
-                            onClick={() => {
-                                setShowDialog(false);
-                            }}
-                        >
-                            Cancel
-                        </button>
+                <div className='flex  items-center gap-10'>
+                    <div className='w-60'>
+                        <span className='text-lg font-semibold'>Date of judge</span>
+                    </div>
+                    <Select 
+                        disabled = {item.status === "pending" ? false : true}
+                        // value={newAdmin.role} 
+                        onValueChange={(value) => setJudge(value)}
+                    >
+                        <SelectTrigger className="w-4/5">
+                            <SelectValue placeholder="Select role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="0">No Infringement</SelectItem>
+                            <SelectItem value="1">1 day</SelectItem>
+                            <SelectItem value="2">3 days</SelectItem>
+                            <SelectItem value="3">7 days</SelectItem>
+                            <SelectItem value="4">1 month</SelectItem>
+                            <SelectItem value="5">Permanent</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <button
+                    disabled = {item.status === "pending" ? false : true}
+                    onClick={() => handleRoleChange()} 
+                    className={item.status === "pending" ?  "bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded" : "bg-green-400 text-white font-semibold py-2 px-4 rounded"}>
+                    Handle
+                </button>
+                <button
+                    className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
+                    onClick={() => {
+                        setShowDialog(false);
+                    }}
+                >
+                    Cancel
+                </button>
                     </div>
                 </div>
             </>
@@ -243,45 +259,41 @@ const UserReportPage = () => {
                 <div className="flex-[2] text-center text-lg font-bold">
                     Reasons
                 </div>
-                <div className="flex-[2] text-center text-lg font-bold">
-                    Description
-                </div>
-
             </div>
             <div className="flex flex-col gap-4">
-                {data.slice(indexS, indexE).map((item, index) => (
-                    <button
-                        key={index}
-                        className={`flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] rounded-2xl 
-                            ${
-                                item?.status
-                                    ? item.status === "Dismiss"
-                                        ? "border-green-500"
-                                        : "border-red-500"
-                                    : "border-[#C2D3FF]"
-                            }`}
-                        onClick={() => {
-                            setShowDialog(true);
-                            setDataDialog(item);
-                        }}
-                    >
-                        <div className="text-base font-regular text-[#797D8C] flex-[1] text-center">
-                            {item.create_at}
-                        </div>
-                        <div className="text-base font-regular text-[#797D8C] flex-[1] text-center truncate">
-                            {item.reporter}
-                        </div>
-                        <div className="text-sm font-semibold text-[#797D8C] flex-[1] text-center truncate">
-                            {item.reported}
-                        </div>
-                        <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate px-5 text-left">
-                            {item.content}
-                        </div>
-                        <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate ">
-                            {item.desc}
-                        </div>
-                    </button>
-                ))}
+                {(data && data.length > 0)&& data.map((item, index) => {
+                    return (
+                        <button
+                            key={index}
+                            className = { 
+                                item.status === "pending" 
+                                    ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#C2D3FF] rounded-2xl" 
+                                    : (
+                                        item.status === "rejected" 
+                                            ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl" 
+                                            : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
+                                        )
+                            }
+                            onClick={() => {
+                                setShowDialog(true);
+                                setDataDialog(item);
+                            }}
+                >
+                    <div className="text-base font-regular text-[#797D8C] flex-[1] text-center">
+                        {item.createdAt}
+                    </div>
+                    <div className="text-base font-regular text-[#797D8C] flex-[1] text-center truncate">
+                        {item.reported_user.fullname}
+                    </div>
+                    <div className="text-sm font-semibold text-[#797D8C] flex-[1] text-center truncate">
+                        {item.reported_content.email}
+                    </div>
+                    <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-left">
+                        {item.reason}
+                    </div>
+                        </button>
+                    )
+                })}
             </div>
             <div className="flex flex-row items-center justify-center my-5  ">
                 {pagination()}
@@ -292,133 +304,3 @@ const UserReportPage = () => {
 };
 
 export default UserReportPage;
-
-const fakeDataUserReport = [
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abcdefg@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "a@gmail.com",
-        reported: "1@gmail.com",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content: "This user has violated community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-    {
-        reporter: "abc@gmail.com",
-        reported: "123@gmail.com",
-        content:
-            "This account has harassing behavior, unhealthy content, the user has violated privacy policy and community standards.",
-        desc: "abc",
-        create_at: "02/12/2010",
-        status: "",
-    },
-];
