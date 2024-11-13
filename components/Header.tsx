@@ -11,7 +11,9 @@ import {
     DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 const Header = () => {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [fullname, setFullname] = useState("Username");
     const [avatar, setAvatar] = useState(
@@ -33,7 +35,7 @@ const Header = () => {
         Cookies.remove("role");
         Cookies.remove("fullname");
         Cookies.remove("avatar");
-        window.location.href = "login";
+        router.replace('/login')
     };
     return (
         <div className="w-full h-20 pl-14 pr-14 pt-7 pb-7 mb-8">

@@ -1,9 +1,16 @@
 'use client'
+import React from 'react'
+import Cookies from 'js-cookie'
 import Header from '@/components/Header'
 import SideBar from '@/components/sidebar'
-import React from 'react'
+import { useRouter } from 'next/navigation'
 
 const LayoutDashboard = (props: { children: React.ReactNode }) => {
+    const router = useRouter()
+    const token = Cookies.get('token');
+    if (!token) {
+        router.replace('/login')
+    }
     return (
         <div className='w-full h-full'>
             <main className='lg:bg-[#fcfcfd] flex lg:overflow-hidden'>
