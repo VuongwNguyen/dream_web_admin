@@ -107,7 +107,6 @@ const UserReportPage = () => {
         );
     };
 
-
     return (
         <div className="pl-12 pr-12 w-full">
             <div className="flex w-full mb-4 border-[1px] border-[#C2D3FF] py-2 px-5">
