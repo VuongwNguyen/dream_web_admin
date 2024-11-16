@@ -4,56 +4,68 @@ import { Select } from "@radix-ui/react-select";
 import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Post } from "@/interfaces/post";
 import ItemPost from "./ItemPost";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface DialogProps {
-    item: Report;
+    _id?: string;
     setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog }) => {
+interface UserIF {
+    _id: string;
+    fullname: string;
+    followingCount: number;
+    followerCount: number;
+    postCount: number;
+    avatar: string;
+}
+
+
+const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
     const [loading, setLoading] = useState(false);
     const [dataPost, setDataPost] = useState<Post[]>([]);
+    const [userIF, setUserIF] = useState<UserIF>()
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [judge, setJudge] = useState("0");
 
-    const handleRoleChange = () => {
-        let today: Date | null = new Date();
-        switch (judge) {
-            case "1":
-                today.setDate(today.getDate() + 1);
-                break;
-            case "2":
-                today.setDate(today.getDate() + 3);
-                break;
-            case "3":
-                today.setDate(today.getDate() + 7);
-                break;
-            case "4":
-                today.setDate(today.getDate() + 30);
-                break;
-            case "5":
-                today = null;
-                break;
-        }
+    // const handleRoleChange = () => {
+    //     let today: Date | null = new Date();
+    //     switch (judge) {
+    //         case "1":
+    //             today.setDate(today.getDate() + 1);
+    //             break;
+    //         case "2":
+    //             today.setDate(today.getDate() + 3);
+    //             break;
+    //         case "3":
+    //             today.setDate(today.getDate() + 7);
+    //             break;
+    //         case "4":
+    //             today.setDate(today.getDate() + 30);
+    //             break;
+    //         case "5":
+    //             today = null;
+    //             break;
+    //     }
 
-        const body = {
-            report_id: item._id,
-            status: judge === "0" ? "rejected" : "resolved",
-            date_of_judge: today,
-        };
+    //     const body = {
+    //         report_id: item._id,
+    //         status: judge === "0" ? "rejected" : "resolved",
+    //         date_of_judge: today,
+    //     };
 
-        AxiosInstance().put("/report/report", body).then(() => {
-            setShowDialog(false);
-        });
-    };
+    //     AxiosInstance().put("/report/report", body).then(() => {
+    //         setShowDialog(false);
+    //     });
+    // };
 
     const fetchData = async () => {
         try {
             setLoading(true);
             setDataPost([]);
             const response = await AxiosInstance().get(
-                `/post/get-post-by-user?_page=${currentPage}&_limit=12&user_id_view=${item.reported_content._id}`
+                `/post/get-post-by-user?_page=${currentPage}&_limit=12&user_id_view=${_id}`
             );
             setDataPost(response.data.list);
             setMaxPage(response.data.page.maxPage);
@@ -64,9 +76,27 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog }) => {
         }
     };
 
+    const fecthDataUser = async () => {
+        try {
+            setLoading(true);
+            const response = await AxiosInstance().get(`/infomation/get-infomation?user_id_view=${_id}`);
+            setUserIF(response.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         fetchData();
-    }, [currentPage, item.reported_content._id]);
+    }, [currentPage, _id]);
+
+    useEffect(() => {
+        fecthDataUser();
+    }, [_id]);
+
+
 
     // Tạo danh sách các trang từ 1 đến maxPage
     const pageNumbers = Array.from({ length: maxPage }, (_, index) => index + 1);
@@ -75,23 +105,35 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog }) => {
         <>
             <div className="fixed inset-0 bg-black bg-opacity-50 z-1"></div>
             <div className="w-[70%] py-5 px-10 fixed top-5 left-60 bg-[#fff] h-auto z-2">
-                <h2 className="text-lg font-bold uppercase text-center">Detail report</h2>
-                <div className="flex flex-row gap-[200px] items-center mb-4 mt-5">
+                <h2 className="text-lg font-bold uppercase text-center">Detail User</h2>
+                <div className="flex flex-row gap-5 items-center mb-4 mt-5">
                     <div>
-                        <span className="text-base text-[#000] font-semibold">Reporter:</span>
-                        <span className="text-base text-[#000] ml-10">{item.reported_user.fullname}</span>
+                        <Avatar className="w-14 h-14">
+                            <AvatarImage src={userIF?.avatar} alt="@shadcn" />
+                            <AvatarFallback>CN</AvatarFallback>
+                        </Avatar>
                     </div>
-                    <div>
-                        <span className="text-base text-[#000] font-semibold">Reported user:</span>
-                        <span className="text-base text-[#000] ml-10">{item.reported_content.email}</span>
+                    <div className="flex gap-5">
+                        <div>
+                            <div className="font-bold text-lg">Followers</div>
+                            <div className="text-center text-base">{userIF?.followerCount}</div>
+                        </div>
+                        <div>
+                            <div className="font-bold text-lg">Following</div>
+                            <div className="text-center text-base">{userIF?.followingCount}</div>
+                        </div>
+                        <div>
+                            <div className="font-bold text-lg">Posts</div>
+                            <div className="text-center text-base">{userIF?.postCount}</div>
+                        </div>
                     </div>
                 </div>
                 <div className="mb-4">
-                    <span className="text-base text-[#000] font-semibold">Content:</span>
-                    <span className="text-base text-[#000] ml-10">{item.reason}</span>
+                    <span className="text-lg text-[#000] font-semibold">{userIF?.fullname}</span>
+
                 </div>
                 <div className="mb-5">
-                    <span className="text-base text-[#000] font-semibold">Data of reported user:</span>
+                    <span className="text-base text-[#000] font-semibold">Data of user:</span>
                     <div className="w-full flex flex-wrap gap-3 bg-[#e5e7e9] p-10 h-[500px] overflow-auto mt-2">
                         {dataPost.map((post, index) => (
                             <div className="w-[calc(33.3%-10px)]" key={index}>
@@ -144,7 +186,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog }) => {
                         <div className="w-60">
                             <span className="text-lg font-semibold">Date of judge</span>
                         </div>
-                        <Select
+                        {/* <Select
                             disabled={item.status === "pending" ? false : true}
                             onValueChange={(value) => setJudge(value)}
                         >
@@ -159,15 +201,15 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog }) => {
                                 <SelectItem value="4">1 month</SelectItem>
                                 <SelectItem value="5">Permanent</SelectItem>
                             </SelectContent>
-                        </Select>
+                        </Select> */}
                     </div>
-                    <button
+                    {/* <button
                         disabled={item.status === "pending" ? false : true}
                         onClick={handleRoleChange}
                         className={item.status === "pending" ? "bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded" : "bg-green-400 text-white font-semibold py-2 px-4 rounded"}
                     >
                         Handle
-                    </button>
+                    </button> */}
                     <button
                         className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
                         onClick={() => setShowDialog(false)}
@@ -180,4 +222,4 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog }) => {
     );
 };
 
-export default memo(DialogReport);
+export default memo(DialogIF);

@@ -3,20 +3,20 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import AxiosInstance from '@/constants/AxiosInstance'
 import { Pencil, Trash2 } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-interface User {
-    username: string
-    role: string
-    email: string
+interface UserAdmin {
+    _id: string,
+    fullname: string,
+    email: string,
+    role: string,
+    avatar: string,
+    isMe: boolean,
 }
 
-const users: User[] = [
-    { username: "Admin1", role: "Admin", email: "admin1@gmail.com" },
-    { username: "Admin2", role: "Super Admin", email: "admin2@gmail.com" },
-    { username: "Admin3", role: "Admin", email: "admin3@gmail.com" },
-]
+
 
 const AdminSettngPage = () => {
     const [newAdmin, setNewAdmin] = useState({
@@ -25,6 +25,11 @@ const AdminSettngPage = () => {
         password: '',
         role: ''
     });
+
+    const [dataAdmins, setDataAdmins] = useState<UserAdmin[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(1);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -38,7 +43,27 @@ const AdminSettngPage = () => {
         setNewAdmin((prev) => ({ ...prev, role: value }));
 
     };
-    console.log(newAdmin.role);
+
+    const fectchDataAdmins = async () => {
+        try {
+            setIsLoading(true)
+            const response = await AxiosInstance().get(`admin/admins?_page=${currentPage}&_limit=3`)
+            setDataAdmins(response.data.list);
+            setMaxPage(response.data.page.max);
+        } catch (error) {
+            console.error(error)
+        }
+        finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fectchDataAdmins()
+    }, [currentPage])
+
+    const pageNumbers = Array.from({ length: maxPage }, (_, index) => index + 1);
+
 
     return (
         <div className='pl-12 pr-12 w-full h-full'>
@@ -95,11 +120,11 @@ const AdminSettngPage = () => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {users.map((user) => (
-                            <TableRow key={user.username}>
-                                <TableCell>{user.username}</TableCell>
-                                <TableCell>{user.role}</TableCell>
-                                <TableCell>{user.email}</TableCell>
+                        {dataAdmins.map((item, index) => (
+                            <TableRow key={index}>
+                                <TableCell>{item.fullname}</TableCell>
+                                <TableCell>{item.role}</TableCell>
+                                <TableCell>{item.email}</TableCell>
                                 <TableCell>
                                     <div className="flex space-x-2">
                                         <Button variant="outline" size="icon">
@@ -115,6 +140,33 @@ const AdminSettngPage = () => {
                         ))}
                     </TableBody>
                 </Table>
+            </div>
+            <div className="flex items-center justify-center gap-2 mt-4">
+                <button
+                    className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
+                    onClick={() => setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)}
+                    disabled={currentPage === 1}
+                >
+                    <div className="text-[#0cbbf0]">{`<<`}</div>
+                </button>
+                <div className="flex gap-2">
+                    {pageNumbers.map((page) => (
+                        <button
+                            key={page}
+                            className={`w-10 h-10 ${currentPage === page ? "bg-[#0cbbf0] text-white" : "bg-[#d9f6ff]"} rounded-lg`}
+                            onClick={() => setCurrentPage(page)}
+                        >
+                            {page}
+                        </button>
+                    ))}
+                </div>
+                <button
+                    className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
+                    onClick={() => setCurrentPage(currentPage < maxPage ? currentPage + 1 : maxPage)}
+                    disabled={currentPage === maxPage}
+                >
+                    <div className="text-[#0cbbf0]">{`>>`}</div>
+                </button>
             </div>
         </div>
     )
