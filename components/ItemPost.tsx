@@ -4,8 +4,36 @@ import { Avatar } from './ui/avatar';
 import { AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import { Earth, Heart, MessageCircle, Share } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react'; // Import Swiper
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/vi';
 import 'swiper/css';
 import 'swiper/css/pagination';
+
+dayjs.extend(relativeTime);
+
+const customLocale = {
+    ...dayjs.Ls.vi,
+    relativeTime: {
+        ...dayjs.Ls.vi.relativeTime,
+        future: 'in %s',
+        past: '%s trước',
+        s: 'vài giây',
+        m: '1 phút',
+        mm: '%d phút',
+        h: '1 giờ',
+        hh: '%d giờ',
+        d: '1 ngày',
+        dd: '%d ngày',
+        M: '1 tháng',
+        MM: '%d tháng',
+        y: '1 năm',
+        yy: '%d năm',
+    },
+};
+
+// Sử dụng locale tùy chỉnh
+dayjs.locale(customLocale);
 
 const ItemPost: React.FC<Post> = ({
     content,
@@ -28,7 +56,7 @@ const ItemPost: React.FC<Post> = ({
                 <div>
                     <div className="font-semibold">{author?.fullname}</div>
                     <div className="flex gap-2">
-                        <div className="text-sm text-slate-600">{createdAt}</div>
+                        <div className="text-sm text-slate-600">{dayjs(createdAt).locale('vi').fromNow()}</div>
                         {privacy_status === 'public' && (
                             <div className="flex items-center gap-2">
                                 <div className="w-2 h-2 rounded-full bg-slate-600"></div>
