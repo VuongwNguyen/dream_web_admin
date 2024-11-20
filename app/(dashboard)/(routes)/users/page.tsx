@@ -22,8 +22,8 @@ const UserPage = () => {
     const [maxPage, setMaxPage] = useState(1);
     const [showDialog, setShowDialog] = useState(false);
     const [selectedId, setSelectedId] = useState<string>();
-    const [sort, setSort] = useState<string>('-1');
-    const [sortType, setSortType] = useState<string>('celebrity');
+    const [sort, setSort] = useState<string>('');
+    const [sortType, setSortType] = useState<string>('');
 
 
 
@@ -31,7 +31,13 @@ const UserPage = () => {
         try {
             setIsLoading(true);
             setDataUser([]);
-            const response = await AxiosInstance().get(`/statistical/celebrity?_page=${currentPage}&_limit=7&_sort=${sort}&sort_type=${sortType}`);
+            const params: Record<string, any> = {
+                _page: currentPage,
+                _limit: 7,
+            };
+            if (sort) params._sort = sort;
+            if (sortType) params.sort_type = sortType;
+            const response = await AxiosInstance().get('/statistical/celebrity', { params });
             setDataUser(response.data.list);
             setMaxPage(response.data.page.max);
         } catch (error) {
@@ -39,7 +45,8 @@ const UserPage = () => {
         } finally {
             setIsLoading(false);
         }
-    }
+    };
+
 
     const handleSortChange = (value: string) => {
         setSort(value)
@@ -80,7 +87,7 @@ const UserPage = () => {
                     </Select>
                     <Select value={sortType} onValueChange={handleSortTypeChange}>
                         <SelectTrigger className="w-52">
-                            <SelectValue placeholder="Sort type" />
+                            <SelectValue placeholder={sortType || 'Sort type'} />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>

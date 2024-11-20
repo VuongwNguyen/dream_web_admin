@@ -29,8 +29,7 @@ const DashboardPage = () => {
     const [dataUsers, setDataUsers] = useState<UserProps[]>([]);
     const [showDialog, setShowDialog] = useState(false);
     const [selectedUser, setSelectedUser] = useState<string>();
-    const [sortType, setSortType] = useState<string>('celebrity');
-
+    const [sortType, setSortType] = useState<string>('');
 
 
 
@@ -72,7 +71,7 @@ const DashboardPage = () => {
                 <span className='font-bold text-[20px]'>Top Featured Users</span>
                 <Select value={sortType} onValueChange={handleSortTypeChange}>
                     <SelectTrigger className="w-52">
-                        <SelectValue placeholder="Sort type" />
+                        <SelectValue placeholder={sortType || 'Sort type'} />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
