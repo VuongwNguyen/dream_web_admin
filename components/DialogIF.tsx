@@ -29,36 +29,6 @@ const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [judge, setJudge] = useState("0");
 
-    // const handleRoleChange = () => {
-    //     let today: Date | null = new Date();
-    //     switch (judge) {
-    //         case "1":
-    //             today.setDate(today.getDate() + 1);
-    //             break;
-    //         case "2":
-    //             today.setDate(today.getDate() + 3);
-    //             break;
-    //         case "3":
-    //             today.setDate(today.getDate() + 7);
-    //             break;
-    //         case "4":
-    //             today.setDate(today.getDate() + 30);
-    //             break;
-    //         case "5":
-    //             today = null;
-    //             break;
-    //     }
-
-    //     const body = {
-    //         report_id: item._id,
-    //         status: judge === "0" ? "rejected" : "resolved",
-    //         date_of_judge: today,
-    //     };
-
-    //     AxiosInstance().put("/report/report", body).then(() => {
-    //         setShowDialog(false);
-    //     });
-    // };
 
     const fetchData = async () => {
         try {
@@ -103,8 +73,8 @@ const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
 
     return (
         <>
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-1"></div>
-            <div className="w-[70%] py-5 px-10 fixed top-5 left-60 bg-[#fff] h-auto z-2">
+            <div className="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+            <div className="w-[70%] py-5 px-10 fixed top-1 left-60 bg-[#fff] h-[98%] z-50">
                 <h2 className="text-lg font-bold uppercase text-center">Detail User</h2>
                 <div className="flex flex-row gap-5 items-center mb-4 mt-5">
                     <div>

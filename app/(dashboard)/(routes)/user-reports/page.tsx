@@ -1,6 +1,7 @@
 "use client";
 import {
     EllipsisVertical,
+    RefreshCcw,
     SquareChevronLeft,
     SquareChevronRight,
 } from "lucide-react";
@@ -21,6 +22,7 @@ const UserReportPage = () => {
     const [dataDialog, setDataDialog] = useState<Report>();
     const pageTotal = Math.ceil((data?.length || 0) / 10);
     const [pageSelected, setPageSelected] = useState(1);
+    const [RefreshDateReport, setRefreshDateReport] = useState(false);
     const [indexS, setIndexS] = useState(0);
     const [indexE, setIndexE] = useState(data?.length < 9 ? data?.length : 9);
     const [judge, setJudge] = useState("0");
@@ -28,9 +30,16 @@ const UserReportPage = () => {
     useEffect(() => {
         AxiosInstance().get("/report/reports?report_type=user")
             .then((res) => {
-                setData(res.data.list)
+                setData(res.data.list);
+                setRefreshDateReport(false)
             });
-    }, []);
+    }, [RefreshDateReport]);
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
+        return date.toLocaleDateString("vi-VN"); // Định dạng theo vùng Việt Nam
+    };
+
 
     const pagination = () => {
         const handlePrevious = () => {
@@ -68,6 +77,8 @@ const UserReportPage = () => {
         };
 
         const visiblePages = getVisiblePages();
+
+
 
         return (
             <div className="flex space-x-2">
@@ -141,7 +152,7 @@ const UserReportPage = () => {
                             }}
                         >
                             <div className="text-base font-regular text-[#797D8C] flex-[1] text-center">
-                                {item.createdAt}
+                                {formatDate(item.createdAt)}
                             </div>
                             <div className="text-base font-regular text-[#797D8C] flex-[1] text-center truncate">
                                 {item.reported_user.fullname}
@@ -149,7 +160,7 @@ const UserReportPage = () => {
                             <div className="text-sm font-semibold text-[#797D8C] flex-[1] text-center truncate">
                                 {item.reported_content.email}
                             </div>
-                            <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-left">
+                            <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-center">
                                 {item.reason}
                             </div>
                         </button>
@@ -160,7 +171,7 @@ const UserReportPage = () => {
                 {pagination()}
             </div>
             {showDialog && dataDialog && (
-                <DialogReport item={dataDialog} setShowDialog={setShowDialog} />
+                <DialogReport item={dataDialog} setShowDialog={setShowDialog} setRefreshDateReport={setRefreshDateReport} />
             )}
         </div>
     );

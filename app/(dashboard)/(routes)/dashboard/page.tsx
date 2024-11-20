@@ -1,6 +1,7 @@
 'use client'
 import DialogIF from '@/components/DialogIF'
 import { Avatar, AvatarImage } from '@/components/ui/avatar'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import AxiosInstance from '@/constants/AxiosInstance'
 import { AvatarFallback } from '@radix-ui/react-avatar'
 import { EllipsisVertical, ScrollText, TriangleAlert, User, UserRound, UserRoundCheck, UsersRound } from 'lucide-react'
@@ -27,7 +28,16 @@ const DashboardPage = () => {
     const [dataStatisticalInfo, setDataStatisticalInfo] = useState<StatisticalInfo>();
     const [dataUsers, setDataUsers] = useState<UserProps[]>([]);
     const [showDialog, setShowDialog] = useState(false);
-    const [selectedUser, setSelectedUser] = useState<string>()
+    const [selectedUser, setSelectedUser] = useState<string>();
+    const [sortType, setSortType] = useState<string>('celebrity');
+
+
+
+
+    const handleSortTypeChange = (value: string) => {
+        setSortType(value)
+    }
+
 
     const fecthStatisticalInfo = async () => {
         try {
@@ -39,7 +49,7 @@ const DashboardPage = () => {
     }
     const fetchTopUsers = async () => {
         try {
-            const response = await AxiosInstance().get('/statistical/celebrity?_page=1&_limit=5&_sort=-1&sort_type=celebrity');
+            const response = await AxiosInstance().get(`/statistical/celebrity?_page=1&_limit=5&_sort=-1&sort_type=${sortType}`);
             setDataUsers(response.data.list);
         } catch (error) {
             console.error(error);
@@ -50,7 +60,7 @@ const DashboardPage = () => {
     }, []);
     useEffect(() => {
         fetchTopUsers()
-    }, []);
+    }, [sortType]);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
@@ -58,8 +68,20 @@ const DashboardPage = () => {
     };
     return (
         <div className='pl-12 pr-12 w-full'>
-            <div className='pt-8 pb-8'>
+            <div className='pt-8 pb-8 flex items-center justify-between'>
                 <span className='font-bold text-[20px]'>Top Featured Users</span>
+                <Select value={sortType} onValueChange={handleSortTypeChange}>
+                    <SelectTrigger className="w-52">
+                        <SelectValue placeholder="Sort type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>Sort type</SelectLabel>
+                            <SelectItem value='celebrity'>Follow sort</SelectItem>
+                            <SelectItem value="post">Post sort</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
             </div>
             <div className='flex flex-col gap-4'>
                 {

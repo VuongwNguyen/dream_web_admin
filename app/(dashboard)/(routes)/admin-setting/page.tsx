@@ -47,13 +47,12 @@ const AdminSettngPage = () => {
 
     const handleRoleChange = (value: string) => {
         setNewAdmin((prev) => ({ ...prev, role: value }));
-
     };
 
     const fectchDataAdmins = async () => {
         try {
             setIsLoading(true)
-            const response = await AxiosInstance().get(`admin/admins?_page=${currentPage}&_limit=3`)
+            const response = await AxiosInstance().get(`admin/admins?_page=${currentPage}&_limit=10`)
             setDataAdmins(response.data.list);
             setMaxPage(response.data.page.max);
         } catch (error) {
@@ -70,11 +69,7 @@ const AdminSettngPage = () => {
 
     const handleRevokeAdmin = async (item: UserAdmin) => {
         try {
-            console.log(item._id)
-            if (item.isMe) {
-                alert('You cannot take back yourself')
-            }
-            else if (role === item.role) {
+            if (role === item.role) {
                 alert('You cannot revoke the permissions of someone of the same level as you');
             }
             const response = await AxiosInstance().put(`/admin/revoke-admin`, { admin_id: item._id });
@@ -163,6 +158,7 @@ const AdminSettngPage = () => {
                     </Button>
                 </div>
             </div>
+            {/* Bảng */}
             <div className='mt-10'>
                 <div className='text-2xl font-bold mb-5'>Tài khoản Admin</div>
                 <Table>
@@ -182,13 +178,11 @@ const AdminSettngPage = () => {
                                 <TableCell>{item.email}</TableCell>
                                 <TableCell>
                                     <div className="flex space-x-2">
-                                        <Button variant="outline" size="icon">
-                                            <Pencil className="h-4 w-4 text-blue-500" />
-
-                                        </Button>
-                                        <Button variant="outline" size="icon" onClick={() => handleRevokeAdmin(item)}>
-                                            <Trash2 className="h-4 w-4 text-red-500" />
-                                        </Button>
+                                        {
+                                            !item.isMe && <Button variant="outline" size="icon" onClick={() => handleRevokeAdmin(item)}>
+                                                <Trash2 className="h-4 w-4 text-red-500" />
+                                            </Button>
+                                        }
                                     </div>
                                 </TableCell>
                             </TableRow>
@@ -196,7 +190,8 @@ const AdminSettngPage = () => {
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-center gap-2 mt-4">
+            {/* page */}
+            <div className="flex items-center justify-center gap-2 mt-4 mb-4">
                 <button
                     className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
                     onClick={() => setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)}

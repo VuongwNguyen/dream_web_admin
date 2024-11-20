@@ -150,11 +150,10 @@ const PostReportPage = () => {
                             setPageSelected(page);
                             fetchData(page);
                         }}
-                        className={`py-1 px-3 rounded-lg ${
-                            page === pageSelected
+                        className={`py-1 px-3 rounded-lg ${page === pageSelected
                                 ? "bg-[#0CBBF0] text-white"
                                 : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
-                        } transition`}
+                            } transition`}
                     >
                         {page}
                     </button>
@@ -173,8 +172,8 @@ const PostReportPage = () => {
         const handleDisable = item.status !== "pending";
         return (
             <>
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-1"></div>
-                <div className="w-[70%] py-5 px-10 fixed top-5 left-60 bg-[#fff] h-auto z-2">
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
+                <div className="w-[70%] py-5 px-10 fixed top-5 left-60 bg-[#fff] h-auto z-50">
                     <h2 className="text-lg font-bold uppercase text-center">
                         Detail report
                     </h2>
@@ -262,19 +261,19 @@ const PostReportPage = () => {
                                 )}
                                 {item?.reported_content?.hashtags?.length >
                                     0 && (
-                                    <div className="flex flex-row gap-[10px]">
-                                        <span className="text-base text-[#000] font-medium">
-                                            Hashtag:
-                                        </span>
-                                        <div>
-                                            {item?.reported_content?.hashtags.map(
-                                                (tag, index) => (
-                                                    <span>#{tag} </span>
-                                                )
-                                            )}
+                                        <div className="flex flex-row gap-[10px]">
+                                            <span className="text-base text-[#000] font-medium">
+                                                Hashtag:
+                                            </span>
+                                            <div>
+                                                {item?.reported_content?.hashtags.map(
+                                                    (tag, index) => (
+                                                        <span>#{tag} </span>
+                                                    )
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )}
                             </div>
                         </div>
                         {!!item?.status && (
@@ -301,9 +300,8 @@ const PostReportPage = () => {
                     <div className="flex justify-end gap-5">
                         <button
                             disabled={handleDisable}
-                            className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${
-                                handleDisable && "opacity-50"
-                            }`}
+                            className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
+                                }`}
                             onClick={() => {
                                 handleReport({
                                     report_id: item._id,
@@ -316,9 +314,8 @@ const PostReportPage = () => {
                         </button>
                         <button
                             disabled={handleDisable}
-                            className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${
-                                handleDisable && "opacity-50"
-                            }`}
+                            className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
+                                }`}
                             onClick={() => {
                                 handleReport({
                                     report_id: item._id,
@@ -376,13 +373,12 @@ const PostReportPage = () => {
                             <button
                                 key={index}
                                 className={`flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] rounded-2xl 
-                            ${
-                                item?.status === "rejected"
-                                    ? "border-green-500"
-                                    : item?.status === "resolved"
-                                    ? "border-red-500"
-                                    : "border-[#C2D3FF]"
-                            }
+                            ${item?.status === "rejected"
+                                        ? "border-green-500"
+                                        : item?.status === "resolved"
+                                            ? "border-red-500"
+                                            : "border-[#C2D3FF]"
+                                    }
                             `}
                                 onClick={() => {
                                     setShowDialog(true);

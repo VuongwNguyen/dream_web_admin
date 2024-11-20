@@ -6,11 +6,13 @@ import React, { useState } from 'react'
 const CommunicatonStandardPage = () => {
     const [dataPrivacyPolicy, setDataPrivacyPolicy] = useState(fakeDataPrivacyPolicy);
     const [dataCommunity, setDataCommunity] = useState(fakeDataCommunity);
+
     return (
         <div className='relative pl-12 pr-12 w-full'>
             <Button className='absolute top-12 right-20 bg-[#0CBBF0] hover:bg-[#0CBBF0] p-6'>
                 <div className='text-[22px] font-bold text-white'>Save & Update</div>
             </Button>
+            {/* Privacy Policy Section */}
             <div className='flex items-center gap-12 pt-8 pb-8'>
                 <div className='text-[24px] font-bold'>Privacy Policy</div>
                 <Button variant='outline' className='border-[#0075E2] bg-[#D9F6FF]'>
@@ -20,10 +22,10 @@ const CommunicatonStandardPage = () => {
             </div>
             <div className='mt-2'>
                 {
-                    dataPrivacyPolicy.map((item, index) => (
-                        <div key={index} className='ml-5'>
+                    dataPrivacyPolicy.map((item) => (
+                        <div key={item.id} className='ml-5'>
                             <div className='flex mb-3 items-center gap-12'>
-                                <div className='text-[20px] font-semibold '>{item.title}</div>
+                                <div className='text-[20px] font-semibold'>{item.title}</div>
                                 <div className='flex items-center gap-5'>
                                     <div className='flex gap-2 items-center cursor-pointer'>
                                         <Pencil size={24} color='#3D29D0' />
@@ -38,7 +40,7 @@ const CommunicatonStandardPage = () => {
                             <div className='ml-4'>
                                 {
                                     item.contents.map((content, index) => (
-                                        <div className='mb-3'>
+                                        <div key={`${item.id}-${index}`} className='mb-3'>
                                             <div className='text-base font-normal'>{content}</div>
                                         </div>
                                     ))
@@ -48,6 +50,7 @@ const CommunicatonStandardPage = () => {
                     ))
                 }
             </div>
+            {/* Community Standards Section */}
             <div className='flex items-center gap-12 pt-8 pb-8'>
                 <div className='text-[24px] font-bold'>Community Standards</div>
                 <Button variant='outline' className='border-[#0075E2] bg-[#D9F6FF]'>
@@ -57,10 +60,10 @@ const CommunicatonStandardPage = () => {
             </div>
             <div className='mt-2'>
                 {
-                    dataCommunity.map((item, index) => (
-                        <div key={index} className='ml-5'>
+                    dataCommunity.map((item) => (
+                        <div key={item.id} className='ml-5'>
                             <div className='flex mb-3 items-center gap-12'>
-                                <div className='text-[20px] font-semibold '>{item.title}</div>
+                                <div className='text-[20px] font-semibold'>{item.title}</div>
                                 <div className='flex items-center gap-5'>
                                     <div className='flex gap-2 items-center cursor-pointer'>
                                         <Pencil size={24} color='#3D29D0' />
@@ -75,7 +78,7 @@ const CommunicatonStandardPage = () => {
                             <div className='ml-4'>
                                 {
                                     item.contents.map((content, index) => (
-                                        <div className='mb-3'>
+                                        <div key={`${item.id}-${index}`} className='mb-3'>
                                             <div className='text-base font-normal'>{content}</div>
                                         </div>
                                     ))
@@ -97,7 +100,7 @@ const fakeDataPrivacyPolicy = [
         title: 'Thu thập thông tin cá nhân',
         contents: [
             'Thông tin đăng ký: Họ tên, địa chỉ email, số điện thoại, ngày sinh, giới tính.',
-            'Dữ liệu sử dụng: Thông tin về hành vi người dùng trên ứng dụng (lịch sử tương tác, nội dung chia sẻ)'
+            'Dữ liệu sử dụng: Thông tin về hành vi người dùng trên ứng dụng (lịch sử tương tác, nội dung chia sẻ).'
         ]
     },
     {
@@ -110,13 +113,12 @@ const fakeDataPrivacyPolicy = [
     },
     {
         id: 3,
-        title: ' Bảo mật dữ liệu',
+        title: 'Bảo mật dữ liệu',
         contents: [
-            'Mã hóa: Thông tin người dùng được mã hóa trong quá trình truyền và lưu trữ.',
+            'Mã hóa: Thông tin người dùng được mã hóa trong quá trình truyền và lưu trữ.'
         ]
     },
-
-]
+];
 
 const fakeDataCommunity = [
     {
@@ -126,7 +128,7 @@ const fakeDataCommunity = [
             'Tôn trọng lẫn nhau: Người dùng phải tôn trọng các quan điểm, quyền lợi, và phẩm giá của người khác.',
             'Ngôn từ thù địch: Cấm phát ngôn chứa ngôn từ phân biệt chủng tộc, giới tính, tôn giáo, và bất kỳ nội dung nào kích động thù hận.',
             'Quấy rối và bắt nạt: Cấm các hành vi quấy rối, đe dọa, xúc phạm, hoặc làm tổn thương tinh thần người dùng khác.',
-            'Phát tán tin giả (Misinformation): Nghiêm cấm phát tán thông tin sai lệch, đặc biệt là liên quan đến sức khỏe, an ninh, hoặc các sự kiện chính trị.'
+            'Phát tán tin giả: Nghiêm cấm phát tán thông tin sai lệch, đặc biệt là liên quan đến sức khỏe, an ninh, hoặc các sự kiện chính trị.'
         ]
     },
     {
@@ -136,6 +138,4 @@ const fakeDataCommunity = [
             'Nội dung bạo lực và kích động: Nghiêm cấm các bài đăng mô tả, khuyến khích hoặc ca ngợi hành vi bạo lực.'
         ]
     },
-
-]
-
+];

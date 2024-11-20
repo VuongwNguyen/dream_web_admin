@@ -3,7 +3,7 @@ interface Report {
     reason?: string;
     status?: string;
     description?: string;
-    createdAt?: string;
+    createdAt: string;
     reported_user?: any;
     reported_content?: any;
 }
