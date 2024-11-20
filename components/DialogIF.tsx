@@ -74,7 +74,7 @@ const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
     return (
         <>
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
-            <div className="w-[70%] py-5 px-10 fixed top-1 left-60 bg-[#fff] h-[98%] z-50">
+            <div className="w-[70%] py-5 px-10 fixed top-1 left-60 bg-[#fff] h-[98%] z-50 overflow-auto">
                 <h2 className="text-lg font-bold uppercase text-center">Detail User</h2>
                 <div className="flex flex-row gap-5 items-center mb-4 mt-5">
                     <div>

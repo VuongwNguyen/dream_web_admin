@@ -28,6 +28,7 @@ export const NAVIGATIONS = [
         icon: "/icon-navbar",
         url: "/admin-setting",
         slug: "admin-setting",
+        access: "superadmin",
     },
     {
         title: "Communicaton Standards",

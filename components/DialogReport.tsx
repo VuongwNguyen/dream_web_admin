@@ -76,7 +76,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
     return (
         <>
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
-            <div className="w-[70%] py-5 fixed px-10 top-1 left-60 bg-[#fff] h-[98%] overflow-auto z-50">
+            <div className="w-[70%] py-5 fixed px-10 top-1 left-60 bg-[#fff] h-[98%] z-50 overflow-auto">
                 <h2 className="text-lg font-bold uppercase text-center">Detail report</h2>
                 <div className="flex flex-row gap-[200px] items-center mb-4 mt-5">
                     <div>

@@ -119,9 +119,9 @@ const AdminSettngPage = () => {
                     <div className='w-28'>
                         <span className='text-lg font-semibold'>Username <span className='text-lg font-semibold text-red-600'>*</span></span>
                     </div>
-                    <div className='flex-1 flex gap-3'>
-                        <Input className='w-[21.7%]' placeholder='First name' name="first_name" value={newAdmin.first_name} onChange={handleInputChange} />
-                        <Input className='w-[21.7%]' placeholder='Last name' name="last_name" value={newAdmin.last_name} onChange={handleInputChange} />
+                    <div className='w-2/5 flex gap-3'>
+                        <Input className='flex-1' placeholder='First name' name="first_name" value={newAdmin.first_name} onChange={handleInputChange} />
+                        <Input className='flex-1' placeholder='Last name' name="last_name" value={newAdmin.last_name} onChange={handleInputChange} />
                     </div>
 
                 </div>
@@ -130,27 +130,6 @@ const AdminSettngPage = () => {
                         <span className='text-lg font-semibold'>Email <span className='text-lg font-semibold text-red-600'>*</span></span>
                     </div>
                     <Input className='w-2/5' placeholder='Email' name="email" value={newAdmin.email} onChange={handleInputChange} />
-                </div>
-                <div className='flex  items-center gap-10'>
-                    <div className='w-28'>
-                        <span className='text-lg font-semibold'>Password <span className='text-lg font-semibold text-red-600'>*</span></span>
-                    </div>
-                    <Input type='password' placeholder='Password' className='w-2/5' name="password" value={newAdmin.password} onChange={handleInputChange} />
-                </div>
-                <div className='flex  items-center gap-10'>
-                    <div className='w-28'>
-                        <span className='text-lg font-semibold'>Role <span className='text-lg font-semibold text-red-600'>*</span></span>
-                    </div>
-                    <Select value={newAdmin.role} onValueChange={handleRoleChange}>
-                        <SelectTrigger className="w-2/5">
-                            <SelectValue placeholder="Select role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="administrator">superadmin</SelectItem>
-                            <SelectItem value="user">admin</SelectItem>
-                            <SelectItem value="moderator">user</SelectItem>
-                        </SelectContent>
-                    </Select>
                 </div>
                 <div className='w-full'>
                     <Button className='w-40 h-14 bg-[#0CBBF0] hover:bg-[#0CBBF0]' onClick={() => handleAddNewAdmin()}>
