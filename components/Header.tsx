@@ -11,7 +11,9 @@ import {
     DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 const Header = () => {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [fullname, setFullname] = useState("Username");
     const [avatar, setAvatar] = useState(
@@ -33,27 +35,13 @@ const Header = () => {
         Cookies.remove("role");
         Cookies.remove("fullname");
         Cookies.remove("avatar");
-        window.location.href = "login";
+        router.replace('/login')
     };
     return (
         <div className="w-full h-20 pl-14 pr-14 pt-7 pb-7 mb-8">
             <div className="flex justify-between items-center">
                 <div className="text-3xl font-bold">Overview</div>
                 <div className="flex items-center gap-10">
-                    <div className="relative w-[412px]">
-                        <Input
-                            className="rounded-3xl bg-[#D9F6FF] placeholder:text-[#0cbbf0] focus-visible:outline-none focus-visible:outline-[#0cbbf0]"
-                            type="search"
-                            placeholder="Search"
-                        />
-                        <Search
-                            className="absolute right-3 top-2"
-                            size={24}
-                            color="#0CBBF0"
-                        />
-                    </div>
-                    <Bell size={24} color="#0cbbf0" />
-
                     <div className="flex gap-2">
                         <Avatar>
                             <AvatarImage src={avatar} alt="@shadcn" />

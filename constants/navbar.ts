@@ -24,15 +24,16 @@ export const NAVIGATIONS = [
         slug: "home",
     },
     {
-        title: "Communicaton Standards",
-        icon: "/icon-navbar",
-        url: "/communicaton-standards",
-        slug: "communicaton-standards",
-    },
-    {
         title: "Admin Setting",
         icon: "/icon-navbar",
         url: "/admin-setting",
         slug: "admin-setting",
+        access: "superadmin",
+    },
+    {
+        title: "Communicaton Standards",
+        icon: "/icon-navbar",
+        url: "/communicaton-standards",
+        slug: "communicaton-standards",
     },
 ];

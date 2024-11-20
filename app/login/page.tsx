@@ -2,7 +2,9 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import AxiosInstance from "@/constants/AxiosInstance";
+import { useRouter } from "next/navigation";
 const LoginPage = () => {
+    const router = useRouter()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
@@ -11,16 +13,15 @@ const LoginPage = () => {
         e.preventDefault();
         setError("");
         try {
-            const res = await AxiosInstance().post('/admin/login-admin',{email,password});
+            const res = await AxiosInstance().post('/admin/login-admin', { email, password });
             console.log(res);
-
             if (res?.status) {
                 Cookies.set("token", res.data.accessToken);
                 Cookies.set("role", res.data.role);
                 Cookies.set("fullname", res.data.fullname);
                 Cookies.set("avatar", res.data.avatar);
                 alert('Đăng nhập thành công!')
-                window.location.href = "dashboard";
+                router.replace('/dashboard');
             } else {
                 setError("Login failed. Please try again.");
             }

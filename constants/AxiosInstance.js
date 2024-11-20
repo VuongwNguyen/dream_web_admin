@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const AxiosInstance = (contentType = "application/json") => {
     const axiosInstance = axios.create({
-        baseURL: "https://1699-2402-800-637d-9a2f-ac7e-a196-ff5-349a.ngrok-free.app/api",
+        baseURL: "http://192.168.10.107:8012/api",
     });
     const token = Cookies.get("token");
     axiosInstance.interceptors.request.use(
