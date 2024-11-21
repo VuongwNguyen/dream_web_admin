@@ -35,10 +35,11 @@ const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
             setLoading(true);
             setDataPost([]);
             const response = await AxiosInstance().get(
-                `/post/get-post-by-user?_page=${currentPage}&_limit=12&user_id_view=${_id}`
+                `statistical/posts?user_id=${_id}&_page=${currentPage}&_limit=12`
             );
+            console.log(response.data.list)
             setDataPost(response.data.list);
-            setMaxPage(response.data.page.maxPage);
+            setMaxPage(response.data.page.max);
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
@@ -153,33 +154,7 @@ const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
 
                 <div className="flex justify-end gap-5 mt-4">
                     <div className="flex items-center gap-10">
-                        <div className="w-60">
-                            <span className="text-lg font-semibold">Date of judge</span>
-                        </div>
-                        {/* <Select
-                            disabled={item.status === "pending" ? false : true}
-                            onValueChange={(value) => setJudge(value)}
-                        >
-                            <SelectTrigger className="w-4/5">
-                                <SelectValue placeholder="Select role" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="0">No Infringement</SelectItem>
-                                <SelectItem value="1">1 day</SelectItem>
-                                <SelectItem value="2">3 days</SelectItem>
-                                <SelectItem value="3">7 days</SelectItem>
-                                <SelectItem value="4">1 month</SelectItem>
-                                <SelectItem value="5">Permanent</SelectItem>
-                            </SelectContent>
-                        </Select> */}
                     </div>
-                    {/* <button
-                        disabled={item.status === "pending" ? false : true}
-                        onClick={handleRoleChange}
-                        className={item.status === "pending" ? "bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded" : "bg-green-400 text-white font-semibold py-2 px-4 rounded"}
-                    >
-                        Handle
-                    </button> */}
                     <button
                         className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
                         onClick={() => setShowDialog(false)}

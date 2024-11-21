@@ -55,10 +55,10 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
             setLoading(true);
             setDataPost([]);
             const response = await AxiosInstance().get(
-                `/post/get-post-by-user?_page=${currentPage}&_limit=12&user_id_view=${item.reported_content._id}`
+                `statistical/posts?user_id=${item.reported_content._id}&_page=${currentPage}&_limit=12`
             );
             setDataPost(response.data.list);
-            setMaxPage(response.data.page.maxPage);
+            setMaxPage(response.data.page.max);
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
