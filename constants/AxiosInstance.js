@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 
 const AxiosInstance = (contentType = "application/json") => {
     const axiosInstance = axios.create({
-        baseURL: "http://192.168.10.107:8012/api",
+        baseURL: "https://dreams-server-bmd.onrender.com/api",
     });
     const token = Cookies.get("token");
     axiosInstance.interceptors.request.use(
