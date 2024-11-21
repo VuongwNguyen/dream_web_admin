@@ -8,6 +8,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue, SelectItem } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import AxiosInstance from '@/constants/AxiosInstance'
 import { Pencil, Trash2 } from 'lucide-react'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 
 
 interface UserAdmin {
@@ -35,6 +36,7 @@ const AdminSettngPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
+
 
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +74,9 @@ const AdminSettngPage = () => {
             if (role === item.role) {
                 alert('You cannot revoke the permissions of someone of the same level as you');
             }
-            const response = await AxiosInstance().put(`/admin/revoke-admin`, { admin_id: item._id });
+            const response = await AxiosInstance().delete(`/admin/revoke-admin`, {
+                data: { admin_id: item._id },
+            });
             if (response.status) {
                 alert('Admin recovery successful');
                 // Loại bỏ item khỏi danh sách
@@ -158,9 +162,26 @@ const AdminSettngPage = () => {
                                 <TableCell>
                                     <div className="flex space-x-2">
                                         {
-                                            !item.isMe && <Button variant="outline" size="icon" onClick={() => handleRevokeAdmin(item)}>
-                                                <Trash2 className="h-4 w-4 text-red-500" />
-                                            </Button>
+                                            !item.isMe && <Dialog >
+                                                <DialogTrigger>
+                                                    <Button variant="outline" size="icon">
+                                                        <Trash2 className="h-4 w-4 text-red-500" />
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>Are you absolutely sure?</DialogTitle>
+                                                        <DialogDescription>
+                                                            If you undo this action. This action will revoke administrator status of this account.
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <div className='w-full flex justify-end'>
+                                                        <Button variant="outline" size="icon" onClick={() => { handleRevokeAdmin(item) }}>
+                                                            <Trash2 className="h-4 w-4 text-red-500" />
+                                                        </Button>
+                                                    </div>
+                                                </DialogContent>
+                                            </Dialog>
                                         }
                                     </div>
                                 </TableCell>
