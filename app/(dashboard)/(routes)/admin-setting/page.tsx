@@ -72,7 +72,9 @@ const AdminSettngPage = () => {
             if (role === item.role) {
                 alert('You cannot revoke the permissions of someone of the same level as you');
             }
-            const response = await AxiosInstance().put(`/admin/revoke-admin`, { admin_id: item._id });
+            const response = await AxiosInstance().delete(`/admin/revoke-admin`, {
+                data: { admin_id: item._id },
+            });
             if (response.status) {
                 alert('Admin recovery successful');
                 // Loại bỏ item khỏi danh sách
