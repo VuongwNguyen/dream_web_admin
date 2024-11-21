@@ -70,7 +70,6 @@ const AdminSettngPage = () => {
             if (response.status) {
                 alert('Admin recovery successful');
                 setDataAdmins((prev) => prev.filter((admin) => admin._id !== selectedAdmin._id));
-                setIsDialogOpen(false);
             }
         } catch (error) {
             console.error('Error revoking admin:', error);
