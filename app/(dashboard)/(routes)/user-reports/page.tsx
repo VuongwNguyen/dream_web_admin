@@ -1,19 +1,8 @@
 "use client";
-import {
-    EllipsisVertical,
-    RefreshCcw,
-    SquareChevronLeft,
-    SquareChevronRight,
-} from "lucide-react";
+import { SquareChevronLeft, SquareChevronRight  } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import AxiosInstance from "@/constants/AxiosInstance";
-import { Select } from "@radix-ui/react-select";
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import DialogReport from "@/components/DialogReport";
-
-
-
-
 
 const UserReportPage = () => {
     //useState Report[]
@@ -28,10 +17,11 @@ const UserReportPage = () => {
     const [judge, setJudge] = useState("0");
 
     useEffect(() => {
-        AxiosInstance().get("/report/reports?report_type=user")
+        AxiosInstance()
+            .get("/report/reports?report_type=user")
             .then((res) => {
                 setData(res.data.list);
-                setRefreshDateReport(false)
+                setRefreshDateReport(false);
             });
     }, [RefreshDateReport]);
 
@@ -39,7 +29,6 @@ const UserReportPage = () => {
         const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
         return date.toLocaleDateString("vi-VN"); // Định dạng theo vùng Việt Nam
     };
-
 
     const pagination = () => {
         const handlePrevious = () => {
@@ -78,8 +67,6 @@ const UserReportPage = () => {
 
         const visiblePages = getVisiblePages();
 
-
-
         return (
             <div className="flex space-x-2">
                 {pageSelected > 3 && (
@@ -100,10 +87,11 @@ const UserReportPage = () => {
                             }
                             setIndexS(page * 9 - 9);
                         }}
-                        className={`py-1 px-3 rounded-lg ${page === pageSelected
-                            ? "bg-[#0CBBF0] text-white"
-                            : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
-                            } transition`}
+                        className={`py-1 px-3 rounded-lg ${
+                            page === pageSelected
+                                ? "bg-[#0CBBF0] text-white"
+                                : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
+                        } transition`}
                     >
                         {page}
                     </button>
@@ -119,7 +107,7 @@ const UserReportPage = () => {
     };
 
     return (
-        <div className="pl-12 pr-12 w-full">
+        <div className="h-full w-full pl-12 pr-12">
             <div className="flex w-full mb-4 border-[1px] border-[#C2D3FF] py-2 px-5">
                 <div className="flex-1 text-center text-lg font-bold">Date</div>
                 <div className="flex-1 text-center text-lg font-bold">
@@ -132,46 +120,50 @@ const UserReportPage = () => {
                     Reasons
                 </div>
             </div>
-            <div className="flex flex-col gap-4">
-                {(data && data.length > 0) && data.map((item, index) => {
-                    return (
-                        <button
-                            key={index}
-                            className={
-                                item.status === "pending"
-                                    ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#C2D3FF] rounded-2xl"
-                                    : (
-                                        item.status === "rejected"
-                                            ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl"
-                                            : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
-                                    )
-                            }
-                            onClick={() => {
-                                setShowDialog(true);
-                                setDataDialog(item);
-                            }}
-                        >
-                            <div className="text-base font-regular text-[#797D8C] flex-[1] text-center">
-                                {formatDate(item.createdAt)}
-                            </div>
-                            <div className="text-base font-regular text-[#797D8C] flex-[1] text-center truncate">
-                                {item.reported_user.fullname}
-                            </div>
-                            <div className="text-sm font-semibold text-[#797D8C] flex-[1] text-center truncate">
-                                {item.reported_content.email}
-                            </div>
-                            <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-center">
-                                {item.reason}
-                            </div>
-                        </button>
-                    )
-                })}
+            <div className="flex flex-col w-full gap-4">
+                {data &&
+                    data.length > 0 &&
+                    data.map((item, index) => {
+                        return (
+                            <button
+                                key={index}
+                                className={
+                                    item.status === "pending"
+                                        ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#C2D3FF] rounded-2xl"
+                                        : item.status === "rejected"
+                                        ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl"
+                                        : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
+                                }
+                                onClick={() => {
+                                    setShowDialog(true);
+                                    setDataDialog(item);
+                                }}
+                            >
+                                <div className="text-base font-regular text-[#797D8C] flex-[1] text-center">
+                                    {formatDate(item.createdAt)}
+                                </div>
+                                <div className="text-base font-regular text-[#797D8C] flex-[1] text-center truncate">
+                                    {item.reported_user.fullname}
+                                </div>
+                                <div className="text-sm font-semibold text-[#797D8C] flex-[1] text-center truncate">
+                                    {item.reported_content.email}
+                                </div>
+                                <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-center">
+                                    {item.reason}
+                                </div>
+                            </button>
+                        );
+                    })}
             </div>
-            <div className="flex flex-row items-center justify-center my-5  ">
+            <div className="fixed bottom-2 left-1/2 transform -translate-x-1/2">
                 {pagination()}
             </div>
             {showDialog && dataDialog && (
-                <DialogReport item={dataDialog} setShowDialog={setShowDialog} setRefreshDateReport={setRefreshDateReport} />
+                <DialogReport
+                    item={dataDialog}
+                    setShowDialog={setShowDialog}
+                    setRefreshDateReport={setRefreshDateReport}
+                />
             )}
         </div>
     );

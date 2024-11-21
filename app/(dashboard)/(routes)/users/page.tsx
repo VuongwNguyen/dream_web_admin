@@ -1,8 +1,6 @@
 "use client";
 import AxiosInstance from "@/constants/AxiosInstance";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { EllipsisVertical } from "lucide-react";
-import React, { use, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import DialogIF from "@/components/DialogIF";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
