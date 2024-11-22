@@ -152,33 +152,36 @@ const UserPage = () => {
                     ))}
                 </div>
                 {/* Pagination */}
-                <div className="flex items-center justify-center gap-2 mt-4 mb-4">
-                    <button
-                        className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
-                        onClick={() => setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)}
-                        disabled={currentPage === 1}
-                    >
-                        <div className="text-[#0cbbf0]">{`<<`}</div>
-                    </button>
-                    <div className="flex gap-2">
-                        {pageNumbers.map((page) => (
-                            <button
-                                key={page}
-                                className={`w-10 h-10 ${currentPage === page ? "bg-[#0cbbf0] text-white" : "bg-[#d9f6ff]"} rounded-lg`}
-                                onClick={() => setCurrentPage(page)}
-                            >
-                                {page}
-                            </button>
-                        ))}
+                {
+                    !isLoading &&
+                    <div className="flex items-center justify-center gap-2 mt-4 mb-4">
+                        <button
+                            className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
+                            onClick={() => setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)}
+                            disabled={currentPage === 1}
+                        >
+                            <div className="text-[#0cbbf0]">{`<<`}</div>
+                        </button>
+                        <div className="flex gap-2">
+                            {pageNumbers.map((page) => (
+                                <button
+                                    key={page}
+                                    className={`w-10 h-10 ${currentPage === page ? "bg-[#0cbbf0] text-white" : "bg-[#d9f6ff]"} rounded-lg`}
+                                    onClick={() => setCurrentPage(page)}
+                                >
+                                    {page}
+                                </button>
+                            ))}
+                        </div>
+                        <button
+                            className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
+                            onClick={() => setCurrentPage(currentPage < maxPage ? currentPage + 1 : maxPage)}
+                            disabled={currentPage === maxPage}
+                        >
+                            <div className="text-[#0cbbf0]">{`>>`}</div>
+                        </button>
                     </div>
-                    <button
-                        className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
-                        onClick={() => setCurrentPage(currentPage < maxPage ? currentPage + 1 : maxPage)}
-                        disabled={currentPage === maxPage}
-                    >
-                        <div className="text-[#0cbbf0]">{`>>`}</div>
-                    </button>
-                </div>
+                }
             </div>
 
             {showDialog && (

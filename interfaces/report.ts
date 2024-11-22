@@ -6,4 +6,5 @@ interface Report {
     createdAt: string;
     reported_user?: any;
     reported_content?: any;
+    judger?: any
 }
