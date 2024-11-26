@@ -31,7 +31,7 @@ export const NAVIGATIONS = [
         access: "superadmin",
     },
     {
-        title: "Communicaton Standards",
+        title: "Platform policy",
         icon: "/icon-navbar",
         url: "/communicaton-standards",
         slug: "communicaton-standards",
