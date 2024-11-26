@@ -55,10 +55,10 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
             setLoading(true);
             setDataPost([]);
             const response = await AxiosInstance().get(
-                `/post/get-post-by-user?_page=${currentPage}&_limit=12&user_id_view=${item.reported_content._id}`
+                `statistical/posts?user_id=${item.reported_content._id}&_page=${currentPage}&_limit=12`
             );
             setDataPost(response.data.list);
-            setMaxPage(response.data.page.maxPage);
+            setMaxPage(response.data.page.max);
         } catch (error) {
             console.error("Error fetching data:", error);
         } finally {
@@ -142,6 +142,28 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                 </div>
 
                 <div className="flex justify-end gap-5 mt-4">
+                    <div className="flex-1">
+                        {!!item?.status && (
+                            <div>
+                                <span className="text-base text-[#000] font-semibold">
+                                    Status:
+                                </span>
+                                <span className="text-base text-[#000] ml-10">
+                                    {item.status}
+                                </span>
+                            </div>
+                        )}
+                        {item?.status !== "pending" && (
+                            <div>
+                                <span className="text-base text-[#000] font-semibold">
+                                    Judger:
+                                </span>
+                                <span className="text-base text-[#000] ml-10">
+                                    {item.judger.fullname}
+                                </span>
+                            </div>
+                        )}
+                    </div>
                     <div className="flex items-center gap-10">
                         <div className="w-60">
                             <span className="text-lg font-semibold">Date of judge</span>

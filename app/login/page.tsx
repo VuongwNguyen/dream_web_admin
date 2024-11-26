@@ -24,8 +24,7 @@ const LoginPage = () => {
                 Cookies.set("role", res.data.role);
                 Cookies.set("fullname", res.data.fullname);
                 Cookies.set("avatar", res.data.avatar);
-                alert("Đăng nhập thành công!");
-                router.replace("/dashboard");
+                router.replace('/dashboard');
             } else {
                 setError("Login failed. Please try again.");
             }
