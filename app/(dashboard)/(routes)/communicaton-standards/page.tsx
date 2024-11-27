@@ -27,34 +27,50 @@ const AddDialog: React.FC<AddDialogProps> = React.memo(
     ({ isOpen, onClose, onAdd }) => {
         const [title, setTitle] = useState<string>("");
         const [content, setContent] = useState<string>("");
-        const [contentList, setContentList] = useState<string[]>([""]);
+        const [contentList, setContentList] = useState<PolicyChild[]>([]);
         const [message, setMessage] = useState<string>("");
+        const [isProcessing, setIsProcessing] = useState(false);
+
+        useEffect(() => {
+            if (isOpen) {
+                setTitle("");
+                setContentList([]);
+                setMessage("");
+            }
+        }, [isOpen]);
 
         const handleAddContent = useCallback(() => {
             if (content.trim()) {
-                setContentList((prev) => [...prev, content.trim()]);
+                setContentList((prev) => [
+                    ...prev,
+                    { _id: Date.now().toString(), title: content.trim() },
+                ]);
                 setContent("");
+                console.log(Date.now().toString());
             }
         }, [content]);
 
-        const handleRemoveContent = useCallback(
-            (index: number) => {
-                setContentList((prev) => prev.filter((_, i) => i !== index));
-            },
-            [contentList]
-        );
-
-        const handleSubmit = () => {
+        const handleRemoveContent = useCallback((id: string) => {
+            setContentList((prev) => prev.filter((item) => item._id !== id));
+        }, []);
+        const handleSubmit = async () => {
             if (!title.trim() || contentList.length === 0) {
                 setMessage("Vui lòng nhập đầy đủ tiêu đề và nội dung!");
                 return;
             }
-
-            onAdd({ title: title, children: contentList });
-            setTitle("");
-            setContentList([""]);
-            setMessage("");
-            onClose();
+            setIsProcessing(true);
+            try {
+                setMessage("");
+                await onAdd({
+                    title: title,
+                    children: contentList.map((item) => item.title),
+                });
+                onClose();
+            } catch (error) {
+                console.error("Error add policy:", error);
+            } finally {
+                setIsProcessing(false);
+            }
         };
 
         if (!isOpen) return null;
@@ -112,15 +128,15 @@ const AddDialog: React.FC<AddDialogProps> = React.memo(
                                 </button>
                             </div>
                             <ul className="mt-4  mb-4 ml-4">
-                                {contentList.slice(1).map((item, index) => (
+                                {contentList.map((item) => (
                                     <li
-                                        key={index}
+                                        key={item._id}
                                         className="flex gap-4 items-center"
                                     >
-                                        {item}
+                                        {item.title}
                                         <button
                                             onClick={() =>
-                                                handleRemoveContent(index + 1)
+                                                handleRemoveContent(item._id)
                                             }
                                         >
                                             <X size={16} color="red" />
@@ -133,8 +149,13 @@ const AddDialog: React.FC<AddDialogProps> = React.memo(
                         {/* Buttons */}
                         <div className="flex flex-row gap-[200px] items-center justify-center mt-6">
                             <button
+                                disabled={isProcessing}
                                 type="submit"
-                                className="px-6 py-2 bg-[#0CBBF0] text-white font-semibold rounded hover:border hover:border-[#0CBBF0] hover:bg-[#9be7fe] hover:text-[#0CBBF0]"
+                                className={`px-6 py-2 bg-[#0CBBF0] text-white font-semibold rounded ${
+                                    isProcessing
+                                        ? "bg-gray-300 text-gray-500"
+                                        : "hover:border hover:border-[#0CBBF0] hover:bg-[#9be7fe] hover:text-[#0CBBF0]"
+                                } `}
                                 onClick={handleSubmit}
                             >
                                 Add
@@ -167,6 +188,18 @@ interface DeleteDialogProps {
 }
 const ConfirmDialog: React.FC<DeleteDialogProps> = React.memo(
     ({ isOpen, onClose, onDelete }) => {
+        const [isProcessing, setIsProcessing] = useState(false);
+        const handleDelete = async () => {
+            setIsProcessing(true);
+            try {
+                await onDelete();
+                onClose();
+            } catch (error) {
+                console.error("Error editing policy:", error);
+            } finally {
+                setIsProcessing(false);
+            }
+        };
         if (!isOpen) return null;
         return (
             <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
@@ -186,11 +219,15 @@ const ConfirmDialog: React.FC<DeleteDialogProps> = React.memo(
                             onClick={onClose}
                             className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
                         >
-                            Cancle
+                            Cancel
                         </button>
                         <button
-                            onClick={onDelete}
-                            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                            onClick={handleDelete}
+                            className={`px-4 py-2 rounded-md ${
+                                isProcessing
+                                    ? "bg-gray-300 text-gray-500"
+                                    : "bg-red-500 text-white hover:bg-red-600"
+                            }`}
                         >
                             Delete
                         </button>
@@ -208,61 +245,58 @@ interface EditDialogProps {
     initData: Policy;
     onFetch: () => void;
 }
-const getChildrenTitles = (policy: Policy): string[] => {
-    return policy.children.map((child) => child.title);
-};
 const EditDialog: React.FC<EditDialogProps> = React.memo(
     ({ isOpen, onClose, initData, onFetch }) => {
         const [title, setTitle] = useState<string>("");
         const [content, setContent] = useState<string>("");
-        const [contentList, setContentList] = useState<string[]>([]);
+        const [contentList, setContentList] = useState<PolicyChild[]>([]);
         const [message, setMessage] = useState<string>("");
+        const [isProcessing, setIsProcessing] = useState(false);
+
         useEffect(() => {
-            if (initData) {
-                setTitle(initData.title || "");
-                setContentList(getChildrenTitles(initData) || []);
+            if (isOpen) {
+                setTitle(initData.title);
+                setContentList([...initData.children]);
             }
-        }, [initData]);
-        // console.log("edit dialog:", initData);
-        // console.log(title);
-        // console.log(contentList);
+        }, [isOpen, initData]);
+
         const handleAddContent = useCallback(() => {
             if (content.trim()) {
-                setContentList((prev) => [...prev, content.trim()]);
+                setContentList((prev) => [
+                    ...prev,
+                    { _id: Date.now().toString(), title: content.trim() },
+                ]);
                 setContent("");
+                console.log(Date.now().toString());
             }
         }, [content]);
 
-        const handleRemoveContent = useCallback(
-            (index: number) => {
-                setContentList((prev) => prev.filter((_, i) => i !== index));
-            },
-            [contentList]
-        );
+        const handleRemoveContent = useCallback((id: string) => {
+            setContentList((prev) => prev.filter((item) => item._id !== id));
+        }, []);
 
         const handleSubmit = async () => {
             if (!title.trim() || contentList.length === 0) {
                 setMessage("Vui lòng nhập đầy đủ tiêu đề và nội dung!");
                 return;
             }
+            setIsProcessing(true);
+
             const body = {
                 id: initData._id,
                 title: title,
-                children: contentList,
+                children: contentList.map((item) => item.title),
             };
             try {
-                const response = await AxiosInstance().post(
-                    "/policy/upsert-policy",
-                    body
-                );
+                await AxiosInstance().post("/policy/upsert-policy", body);
                 alert("Cập nhật tài khoản điều khoản thành công!");
-                setTitle("");
-                setContentList([""]);
                 setMessage("");
                 onClose();
                 onFetch();
             } catch (error) {
                 alert(`Lỗi cập nhật điều khoản: ${error}`);
+            } finally {
+                setIsProcessing(false);
             }
         };
 
@@ -321,15 +355,15 @@ const EditDialog: React.FC<EditDialogProps> = React.memo(
                                 </button>
                             </div>
                             <ul className="mt-4  mb-4 ml-4">
-                                {contentList.slice(1).map((item, index) => (
+                                {contentList.map((item) => (
                                     <li
-                                        key={index}
+                                        key={item._id}
                                         className="flex gap-4 items-center"
                                     >
-                                        {item}
+                                        {item.title}
                                         <button
                                             onClick={() =>
-                                                handleRemoveContent(index + 1)
+                                                handleRemoveContent(item._id)
                                             }
                                         >
                                             <X size={16} color="red" />
@@ -342,8 +376,13 @@ const EditDialog: React.FC<EditDialogProps> = React.memo(
                         {/* Buttons */}
                         <div className="flex flex-row gap-[200px] items-center justify-center mt-6">
                             <button
+                                disabled={isProcessing}
                                 type="submit"
-                                className="px-6 py-2 bg-[#0CBBF0] text-white font-semibold rounded hover:border hover:border-[#0CBBF0] hover:bg-[#9be7fe] hover:text-[#0CBBF0]"
+                                className={`px-6 py-2 bg-[#0CBBF0] text-white font-semibold rounded ${
+                                    isProcessing
+                                        ? "bg-gray-300 text-gray-500"
+                                        : "hover:border hover:border-[#0CBBF0] hover:bg-[#9be7fe] hover:text-[#0CBBF0]"
+                                } `}
                                 onClick={handleSubmit}
                             >
                                 Update
