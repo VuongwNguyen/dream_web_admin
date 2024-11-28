@@ -4,16 +4,20 @@ import Cookies from "js-cookie";
 import AxiosInstance from "@/constants/AxiosInstance";
 import { useRouter } from "next/navigation";
 const LoginPage = () => {
-    const router = useRouter()
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
         try {
-            const res = await AxiosInstance().post('/admin/login-admin', { email, password });
+            const res = await AxiosInstance().post("/admin/login-admin", {
+                email,
+                password,
+            });
             console.log(res);
             if (res?.status) {
                 Cookies.set("token", res.data.accessToken);
@@ -57,14 +61,23 @@ const LoginPage = () => {
                         <label className="block text-left text-gray-600 font-semibold mb-2">
                             Password
                         </label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#00C3FE]"
-                            placeholder="Enter your password"
-                            required
-                        />
+                        <div className="relative w-full">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#00C3FE]"
+                                placeholder="Enter your password"
+                                required
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                            >
+                                {showPassword ? "Hide" : "Show"}
+                            </button>
+                        </div>
                     </div>
 
                     {error && (

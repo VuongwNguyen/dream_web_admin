@@ -14,7 +14,7 @@ const LayoutDashboard = (props: { children: React.ReactNode }) => {
 
     return (
         <div className='w-full h-full'>
-            <main className='lg:bg-[#fcfcfd] flex'>
+            <main className='lg:bg-[#fcfcfd] flex'> 
                 {/* SideBar cố định */}
                 <SideBar
                     className='bg-[#0CBBF0] w-80 h-screen hidden lg:block fixed top-0 left-0'
