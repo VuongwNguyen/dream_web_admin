@@ -1,7 +1,7 @@
 "use client";
 import { SquareChevronLeft, SquareChevronRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import AxiosInstance from "../../../../constants/AxiosInstance";
+import AxiosInstance from "@/constants/AxiosInstance";
 import moment from "moment";
 
 const PostReportPage = () => {
@@ -105,7 +105,7 @@ const PostReportPage = () => {
     };
     useEffect(() => {
         fetchData(pageSelected);
-    }, []);
+    }, [pageSelected]);
 
     const pagination = () => {
         const handlePrevious = () => {
@@ -150,10 +150,11 @@ const PostReportPage = () => {
                             setPageSelected(page);
                             fetchData(page);
                         }}
-                        className={`py-1 px-3 rounded-lg ${page === pageSelected
+                        className={`py-1 px-3 rounded-lg ${
+                            page === pageSelected
                                 ? "bg-[#0CBBF0] text-white"
                                 : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
-                            } transition`}
+                        } transition`}
                     >
                         {page}
                     </button>
@@ -261,19 +262,19 @@ const PostReportPage = () => {
                                 )}
                                 {item?.reported_content?.hashtags?.length >
                                     0 && (
-                                        <div className="flex flex-row gap-[10px]">
-                                            <span className="text-base text-[#000] font-medium">
-                                                Hashtag:
-                                            </span>
-                                            <div>
-                                                {item?.reported_content?.hashtags.map(
-                                                    (tag, index) => (
-                                                        <span>#{tag} </span>
-                                                    )
-                                                )}
-                                            </div>
+                                    <div className="flex flex-row gap-[10px]">
+                                        <span className="text-base text-[#000] font-medium">
+                                            Hashtag:
+                                        </span>
+                                        <div>
+                                            {item?.reported_content?.hashtags.map(
+                                                (tag, index) => (
+                                                    <span>#{tag} </span>
+                                                )
+                                            )}
                                         </div>
-                                    )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {!!item?.status && (
@@ -300,8 +301,9 @@ const PostReportPage = () => {
                     <div className="flex justify-end gap-5">
                         <button
                             disabled={handleDisable}
-                            className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
-                                }`}
+                            className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${
+                                handleDisable && "opacity-50"
+                            }`}
                             onClick={() => {
                                 handleReport({
                                     report_id: item._id,
@@ -314,8 +316,9 @@ const PostReportPage = () => {
                         </button>
                         <button
                             disabled={handleDisable}
-                            className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
-                                }`}
+                            className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${
+                                handleDisable && "opacity-50"
+                            }`}
                             onClick={() => {
                                 handleReport({
                                     report_id: item._id,
@@ -373,12 +376,13 @@ const PostReportPage = () => {
                             <button
                                 key={index}
                                 className={`flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] rounded-2xl 
-                            ${item?.status === "rejected"
-                                        ? "border-green-500"
-                                        : item?.status === "resolved"
-                                            ? "border-red-500"
-                                            : "border-[#C2D3FF]"
-                                    }
+                            ${
+                                item?.status === "rejected"
+                                    ? "border-green-500"
+                                    : item?.status === "resolved"
+                                    ? "border-red-500"
+                                    : "border-[#C2D3FF]"
+                            }
                             `}
                                 onClick={() => {
                                     setShowDialog(true);
@@ -408,7 +412,8 @@ const PostReportPage = () => {
                             </button>
                         ))}
                     </div>
-                    <div className="fixed bottom-2 left-1/2 transform -translate-x-1/2 ">
+
+                    <div className="fixed bottom-2 left-1/2 transform -translate-x-1/2">
                         {pagination()}
                     </div>
                 </div>
