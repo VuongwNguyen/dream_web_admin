@@ -38,7 +38,7 @@ const Header = () => {
         router.replace('/login')
     };
     return (
-        <div className="w-full h-20 pl-14 pr-14 pt-7 pb-7 mb-8">
+        <div className="w-full h-20 pl-14 pr-14 pt-7 pb-7 mb-8 border-b-[1px]">
             <div className="flex justify-between items-center">
                 <div className="text-3xl font-bold">Overview</div>
                 <div className="flex items-center gap-10">
@@ -78,13 +78,13 @@ const Header = () => {
                                         aria-labelledby="menu-button"
                                     >
                                         <div className="py-1" role="none">
-                                            <a
-                                                href="#"
-                                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            <button
+                                                onClick={() => { router.push('/setting-profile'); setIsOpen(false) }}
+                                                className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                 role="menuitem"
                                             >
                                                 Profile
-                                            </a>
+                                            </button>
                                             <a
                                                 href="#"
                                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
