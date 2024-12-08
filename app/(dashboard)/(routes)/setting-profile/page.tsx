@@ -272,6 +272,7 @@ const SettingProfilePage: React.FC = () => {
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                             placeholder="Password"
+                                            type="password"
                                         />
                                         {
                                             errorDescription.errType == 'password'
@@ -292,6 +293,7 @@ const SettingProfilePage: React.FC = () => {
                                             value={newPassword}
                                             onChange={(e) => setNewPassword(e.target.value)}
                                             placeholder="New Password"
+                                            type="password"
                                         />
 
                                     </div>
@@ -307,6 +309,7 @@ const SettingProfilePage: React.FC = () => {
                                             value={confirmPassword}
                                             onChange={(e) => setConfirmPassword(e.target.value)}
                                             placeholder="Confirm Password"
+                                            type="password"
                                         />
                                         {
                                             errorDescription.errType == 'passwordEmty'
