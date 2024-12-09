@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { DialogClose } from "@radix-ui/react-dialog";
 import AxiosInstance from "@/constants/AxiosInstance";
 import { ErrorDescription } from "@/interfaces/ErrorDescription";
+import { useUser } from "@/src/contexts/UserContext";
 
 const SettingProfilePage: React.FC = () => {
     const [avatarShow, setAvatarShow] = useState<string>("");
@@ -32,6 +33,7 @@ const SettingProfilePage: React.FC = () => {
     const [isLoadingChange, setIsLoadingChange] = useState(false);
     const [isDialogOpenChange, setIsDialogOpenChange] = useState(false);
     const [errorDescription, setErrorDescription] = useState<ErrorDescription>({})
+    const { setUserData } = useUser();
 
     useEffect(() => {
         const name = Cookies.get("fullname") ?? "";
@@ -53,38 +55,39 @@ const SettingProfilePage: React.FC = () => {
         try {
             setIsLoadingUp(true);
             const formData = new FormData();
-            if (firstName == '' || lastName == '') {
-                setErrorDescription({ message: 'Please fill in all fields', errType: 'text' })
-                return
+            if (!firstName || !lastName) {
+                setErrorDescription({ message: 'Please fill in all fields', errType: 'text' });
+                setIsLoadingUp(false);
+                return;
             }
-            if (avatar == null) {
-                setErrorDescription({ message: 'Please select a photo', errType: 'avatar' })
-                return
+            if (!avatar) {
+                setIsLoadingUp(false);
+                return;
             }
-            setErrorDescription({})
-            formData.append("avatar", avatar);
-            formData.append("first_name", firstName);
-            formData.append("last_name", lastName);
 
-            const response = await AxiosInstance().post(`/infomation/change-avatar-name`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            setErrorDescription({});
+            console.log(avatar)
+            formData.append('avatar', avatar);
+            formData.append('first_name', firstName);
+            formData.append('last_name', lastName);
+
+            const response = await AxiosInstance('multipart/form-data; boundary=<calculated when request is sent>').post('/infomation/change-avatar-name', formData);
+
             if (response.status) {
-                Cookies.set("avatar", response.data.avatar);
-                Cookies.set("fullname", response.data.fullname);
-                setAvatar(null)
+                const { avatar: newAvatar, fullname } = response.data;
+                Cookies.set('avatar', newAvatar);
+                Cookies.set('fullname', fullname);
+                setAvatar(null);
+                setUserData({ avatar: newAvatar, fullname }); // Cập nhật vào Context
                 setIsDialogOpenUp(false);
             }
-
         } catch (error) {
-            console.log(error)
+            console.error(error);
         } finally {
             setIsLoadingUp(false);
         }
-
     };
+
 
     const handleAvatarChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -108,11 +111,7 @@ const SettingProfilePage: React.FC = () => {
             const formData = new FormData();
             formData.append("oldPassword", password);
             formData.append("newPassword", newPassword);
-            const response = await AxiosInstance().post(`/account/change-password`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            const response = await AxiosInstance().post(`/account/change-password`, formData);
             console.log(response.data)
             if (response.status) {
                 setIsDialogOpenChange(false);
