@@ -1,5 +1,5 @@
 "use client";
-import { SquareChevronLeft, SquareChevronRight  } from "lucide-react";
+import { SquareChevronLeft, SquareChevronRight } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import AxiosInstance from "@/constants/AxiosInstance";
 import DialogReport from "@/components/DialogReport";
@@ -11,7 +11,7 @@ const UserReportPage = () => {
     const [dataDialog, setDataDialog] = useState<Report>();
     const pageTotal = Math.ceil((data?.length || 0) / 10);
     const [pageSelected, setPageSelected] = useState(1);
-    const [RefreshDateReport, setRefreshDateReport] = useState(false);
+    const [RefreshDataReport, setRefreshDataReport] = useState(false);
     const [indexS, setIndexS] = useState(0);
     const [indexE, setIndexE] = useState(data?.length < 9 ? data?.length : 9);
     const [judge, setJudge] = useState("0");
@@ -21,9 +21,9 @@ const UserReportPage = () => {
             .get("/report/reports?report_type=user")
             .then((res) => {
                 setData(res.data.list);
-                setRefreshDateReport(false);
+                setRefreshDataReport(false);
             });
-    }, [RefreshDateReport]);
+    }, [RefreshDataReport]);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
@@ -87,11 +87,10 @@ const UserReportPage = () => {
                             }
                             setIndexS(page * 9 - 9);
                         }}
-                        className={`py-1 px-3 rounded-lg ${
-                            page === pageSelected
+                        className={`py-1 px-3 rounded-lg ${page === pageSelected
                                 ? "bg-[#0CBBF0] text-white"
                                 : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
-                        } transition`}
+                            } transition`}
                     >
                         {page}
                     </button>
@@ -131,8 +130,8 @@ const UserReportPage = () => {
                                     item.status === "pending"
                                         ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#C2D3FF] rounded-2xl"
                                         : item.status === "rejected"
-                                        ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl"
-                                        : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
+                                            ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl"
+                                            : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
                                 }
                                 onClick={() => {
                                     setShowDialog(true);
@@ -162,7 +161,7 @@ const UserReportPage = () => {
                 <DialogReport
                     item={dataDialog}
                     setShowDialog={setShowDialog}
-                    setRefreshDateReport={setRefreshDateReport}
+                    setRefreshDataReport={setRefreshDataReport}
                 />
             )}
         </div>

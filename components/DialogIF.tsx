@@ -11,7 +11,7 @@ interface DialogProps {
     _id?: string;
     isBanned?: boolean
     setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
-    setRefreshDateUser: React.Dispatch<React.SetStateAction<boolean>>
+    setRefreshDataUser: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface UserIF {
@@ -25,7 +25,7 @@ interface UserIF {
 }
 
 
-const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefreshDateUser }) => {
+const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefreshDataUser }) => {
     const [loading, setLoading] = useState(false);
     const [dataPost, setDataPost] = useState<Post[]>([]);
     const [userIF, setUserIF] = useState<UserIF>()
@@ -114,7 +114,7 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
             if (response.status) {
                 alert("Cập nhật trạng thái thành công!");
                 setShowDialog(false);
-                setRefreshDateUser(true)
+                setRefreshDataUser(true)
             }
         } catch (error) {
 

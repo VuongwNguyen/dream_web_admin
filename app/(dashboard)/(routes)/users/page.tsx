@@ -25,7 +25,7 @@ const UserPage = () => {
     const [sortType, setSortType] = useState<string>('');
     const [isBanned, setIsBanned] = useState<boolean>(false);
     const [sortStatus, setSortStatus] = useState<string>('2');
-    const [RefreshDateUser, setRefreshDateUser] = useState<boolean>(false)
+    const [RefreshDataUser, setRefreshDataUser] = useState<boolean>(false)
 
 
 
@@ -47,7 +47,7 @@ const UserPage = () => {
             console.log(error);
         } finally {
             setIsLoading(false);
-            setRefreshDateUser(false);
+            setRefreshDataUser(false);
         }
     };
 
@@ -68,7 +68,7 @@ const UserPage = () => {
 
     useEffect(() => {
         fetchDataUser();
-    }, [currentPage, sort, sortType, sortStatus, RefreshDateUser]);
+    }, [currentPage, sort, sortType, sortStatus, RefreshDataUser]);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
@@ -215,10 +215,10 @@ const UserPage = () => {
             </div>
             {showDialog && (
                 <DialogIF
-                    _id={selectedId || "671e6b5def87ad3b93adb082"}
+                    _id={selectedId}
                     isBanned={isBanned}
                     setShowDialog={setShowDialog}
-                    setRefreshDateUser={setRefreshDateUser}
+                    setRefreshDataUser={setRefreshDataUser}
                 />
             )}
         </div>

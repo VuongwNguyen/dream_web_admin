@@ -8,10 +8,10 @@ import ItemPost from "./ItemPost";
 interface DialogProps {
     item: Report;
     setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
-    setRefreshDateReport: React.Dispatch<React.SetStateAction<boolean>>
+    setRefreshDataReport: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDateReport }) => {
+const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDataReport }) => {
     const [loading, setLoading] = useState(false);
     const [dataPost, setDataPost] = useState<Post[]>([]);
     const [maxPage, setMaxPage] = useState(1);
@@ -46,7 +46,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
 
         AxiosInstance().put("/report/report", body).then(() => {
             setShowDialog(false);
-            setRefreshDateReport(true)
+            setRefreshDataReport(true)
         });
     };
 
