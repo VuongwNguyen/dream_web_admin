@@ -8,8 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 
 interface DialogProps {
-    _id?: string;
-    isBanned?: boolean
+    _id: string;
+    isBanned: boolean
     setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
     setRefreshDateUser: React.Dispatch<React.SetStateAction<boolean>>
 }
