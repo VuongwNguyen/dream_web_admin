@@ -1,6 +1,6 @@
 "use client";
 import AxiosInstance from "@/constants/AxiosInstance";
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import DialogIF from "@/components/DialogIF";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -10,6 +10,7 @@ interface UserProps {
     email: string;
     count_follower: number;
     count_post: string;
+    isBanned: boolean;
     createdAt: string;
 }
 
@@ -22,6 +23,9 @@ const UserPage = () => {
     const [selectedId, setSelectedId] = useState<string>();
     const [sort, setSort] = useState<string>('');
     const [sortType, setSortType] = useState<string>('');
+    const [isBanned, setIsBanned] = useState<boolean>(false);
+    const [sortStatus, setSortStatus] = useState<string>('2');
+    const [RefreshDateUser, setRefreshDateUser] = useState<boolean>(false)
 
 
 
@@ -35,6 +39,7 @@ const UserPage = () => {
             };
             if (sort) params._sort = sort;
             if (sortType) params.sort_type = sortType;
+            if (sortStatus) params.ban = sortStatus
             const response = await AxiosInstance().get('/statistical/celebrity', { params });
             setDataUser(response.data.list);
             setMaxPage(response.data.page.max);
@@ -42,6 +47,7 @@ const UserPage = () => {
             console.log(error);
         } finally {
             setIsLoading(false);
+            setRefreshDateUser(false);
         }
     };
 
@@ -53,10 +59,16 @@ const UserPage = () => {
     const handleSortTypeChange = (value: string) => {
         setSortType(value)
     }
+    const handleSortStatus = (value: string) => {
+        setSortStatus(value)
+        if (value === "1" || value === "0") {
+            setCurrentPage(1);
+        }
+    }
 
     useEffect(() => {
         fetchDataUser();
-    }, [currentPage, sort, sortType]);
+    }, [currentPage, sort, sortType, sortStatus, RefreshDateUser]);
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
@@ -95,6 +107,19 @@ const UserPage = () => {
                             </SelectGroup>
                         </SelectContent>
                     </Select>
+                    <Select value={sortStatus} onValueChange={handleSortStatus}>
+                        <SelectTrigger className="w-52">
+                            <SelectValue placeholder={sortType || 'Sort status'} />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectLabel>Sort status</SelectLabel>
+                                <SelectItem value="2">All</SelectItem>
+                                <SelectItem value="0">Active</SelectItem>
+                                <SelectItem value="1">Locked</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
                 </div>
                 {/* Header table */}
                 <div className="w-full border h-16 flex border-[#c2d3ff] items-center">
@@ -116,6 +141,9 @@ const UserPage = () => {
                     <div className="w-1/5 text-center font-bold">
                         Created Date
                     </div>
+                    <div className="w-1/5 text-center font-bold">
+                        Status
+                    </div>
                 </div>
                 {/* Item  */}
                 <div className="w-full flex flex-col gap-4 mt-4">
@@ -126,6 +154,7 @@ const UserPage = () => {
                             onClick={() => {
                                 setShowDialog(true)
                                 setSelectedId(item._id)
+                                setIsBanned(item.isBanned)
                             }}
                         >
                             <div className="w-1/5 text-center text-base font-bold">
@@ -135,7 +164,7 @@ const UserPage = () => {
                                 {item.fullname}
                             </div>
                             <div className="w-1/5 text-center text-base font-extrabold text-[#04103B]">
-                                {item.count_follower} Follower
+                                {item.count_follower} Followers
                             </div>
                             <div className="w-1/5 text-center text-sm font-semibold text-[#797D8C]">
                                 {item.count_post} Posts
@@ -145,6 +174,9 @@ const UserPage = () => {
                             </div>
                             <div className="w-1/5 text-center text-sm font-semibold text-[#797D8C]">
                                 From {formatDate(item.createdAt)}
+                            </div>
+                            <div className="w-1/5 text-center text-sm font-semibold text-[#797D8C]">
+                                {item.isBanned ? <span className="text-red-600">Locked</span> : <span className="text-green-500">Active</span>}
                             </div>
                         </div>
                     ))}
@@ -183,7 +215,7 @@ const UserPage = () => {
             </div>
 
             {showDialog && (
-                <DialogIF _id={selectedId} setShowDialog={setShowDialog} />
+                <DialogIF _id={selectedId} setShowDialog={setShowDialog} isBanned={isBanned} setRefreshDateUser={setRefreshDateUser} />
             )}
         </div>
     );

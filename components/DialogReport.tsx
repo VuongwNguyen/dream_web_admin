@@ -173,7 +173,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                             onValueChange={(value) => setJudge(value)}
                         >
                             <SelectTrigger className="w-4/5">
-                                <SelectValue placeholder="Select role" />
+                                <SelectValue placeholder={judge === '0' && 'No Infringement'} />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="0">No Infringement</SelectItem>
@@ -190,7 +190,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                         onClick={handleRoleChange}
                         className={item.status === "pending" ? "bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded" : "bg-green-400 text-white font-semibold py-2 px-4 rounded"}
                     >
-                        Handle
+                        Save
                     </button>
                     <button
                         className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
