@@ -218,7 +218,7 @@ const UserPage = () => {
                     _id={selectedId}
                     isBanned={isBanned}
                     setShowDialog={setShowDialog}
-                    setRefreshDateUser={() => setRefreshDateUser(true)}
+                    setRefreshDateUser={setRefreshDateUser}
                 />
             )}
         </div>
