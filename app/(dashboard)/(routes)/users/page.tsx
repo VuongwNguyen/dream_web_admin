@@ -213,7 +213,6 @@ const UserPage = () => {
                     </div>
                 }
             </div>
-
             {showDialog && (
                 <DialogIF _id={selectedId} setShowDialog={setShowDialog} isBanned={isBanned} setRefreshDateUser={setRefreshDateUser} />
             )}
