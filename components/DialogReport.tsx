@@ -184,7 +184,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                         {item?.status !== "pending" && (
                             <div>
                                 <span className="text-xl text-[#000] font-semibold">
-                                    Processing date:
+                                    Processing time:
                                 </span>
                                 <span className="text-xl text-[#000] ml-5">
                                     {formatDate(item.updatedAt)}
@@ -198,16 +198,16 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                         item.status === 'pending' &&
                         <div className="flex items-center gap-5">
                             <div className="w-60">
-                                <span className="text-lg font-semibold">Date of judge</span>
+                                <span className="text-lg font-semibold">Day of judge</span>
                             </div>
                             <Select
                                 onValueChange={(value) => setJudge(value)}
                             >
                                 <SelectTrigger className="w-4/5">
-                                    <SelectValue placeholder={judge === '0' && 'No Infringement'} />
+                                    <SelectValue placeholder={judge === '0' && 'No processing'} />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="0">No Infringement</SelectItem>
+                                    <SelectItem value="0">No processing</SelectItem>
                                     <SelectItem value="1">1 day</SelectItem>
                                     <SelectItem value="2">3 days</SelectItem>
                                     <SelectItem value="3">7 days</SelectItem>

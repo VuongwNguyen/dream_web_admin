@@ -307,7 +307,7 @@ const PostReportPage = () => {
                         {item?.status !== "pending" && (
                             <div>
                                 <span className="text-xl text-[#000] font-semibold">
-                                    Processing date:
+                                    Processing time:
                                 </span>
                                 <span className="text-xl text-[#000] ml-5">
                                     {formatDate(item.updatedAt)}
@@ -418,7 +418,7 @@ const PostReportPage = () => {
                                 <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate">
                                     {!!item.description
                                         ? item.description
-                                        : "Null"}
+                                        : "No description"}
                                 </div>
                             </button>
                         ))}
