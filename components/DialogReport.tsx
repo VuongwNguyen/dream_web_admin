@@ -88,18 +88,27 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
             <div className="w-[70%] py-5 fixed px-10 top-1 left-60 bg-[#fff] h-[98%] z-50 overflow-auto">
                 <h2 className="text-lg font-bold uppercase text-center">Detail report</h2>
                 <div className="flex flex-row gap-[200px] items-center mb-4 mt-5">
-                    <div>
-                        <span className="text-base text-[#000] font-semibold">Reporter:</span>
-                        <span className="text-base text-[#000] ml-10">{item.reported_user.fullname}</span>
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <span className="text-base text-[#000] font-semibold">Reporter:</span>
+                            <span className="text-base text-[#000] ml-10">{item.reported_user.fullname}</span>
+                        </div>
+                        <div>
+                            <span className="text-base text-[#000] font-semibold">Content:</span>
+                            <span className="text-base text-[#000] ml-10">{item.reason}</span>
+                        </div>
                     </div>
-                    <div>
-                        <span className="text-base text-[#000] font-semibold">Reported user:</span>
-                        <span className="text-base text-[#000] ml-10">{item.reported_content.fullname}</span>
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <span className="text-base text-[#000] font-semibold">Reported user:</span>
+                            <span className="text-base text-[#000] ml-10">{item.reported_content.fullname}</span>
+                        </div>
+                        <div >
+                            <span className="text-base text-[#000] font-semibold">Reporting time:</span>
+                            <span className="text-base text-[#000] ml-10">{formatDate(item.createdAt)}</span>
+                        </div>
                     </div>
-                </div>
-                <div className="mb-4">
-                    <span className="text-base text-[#000] font-semibold">Content:</span>
-                    <span className="text-base text-[#000] ml-10">{item.reason}</span>
+
                 </div>
                 <div className="mb-5">
                     <span className="text-base text-[#000] font-semibold">Data of reported user:</span>
@@ -157,7 +166,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                                 <span className="text-xl text-[#000] font-semibold">
                                     Status:
                                 </span>
-                                <span className={`text-xl ${item.status == 'pending' ? 'text-[#0CBBF0]' : item.status == 'rejected' ? 'text-green-500' : 'text-red-500'} ml-5`}>
+                                <span className={`text-xl ${item.status == 'pending' ? 'text-[#0CBBF0]' : item.status == 'rejected' ? 'text-red-500' : 'text-green-500'} ml-5`}>
                                     {item.status}
                                 </span>
                             </div>
@@ -210,7 +219,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                                 onClick={handleRoleChange}
                                 className={item.status === "pending" ? "bg-green-500 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded" : "bg-green-400 text-white font-semibold py-2 px-4 rounded"}
                             >
-                                Save
+                                Resolve
                             </button>
                         </div>
                     }

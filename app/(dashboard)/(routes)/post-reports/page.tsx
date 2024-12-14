@@ -168,6 +168,13 @@ const PostReportPage = () => {
             </div>
         );
     };
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const formattedDate = date.toLocaleDateString("vi-VN");
+        const formattedTime = date.toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        return `${formattedDate} ${formattedTime}`;
+    };
+
     const [dataDialog, setDataDialog] = useState(initialData);
     const dialog = (item: Report) => {
         const handleDisable = item.status !== "pending";
@@ -199,10 +206,10 @@ const PostReportPage = () => {
                             </div>
                             <div>
                                 <span className="text-base text-[#000] font-semibold">
-                                    Post ID:
+                                    Reporting time:
                                 </span>
                                 <span className="text-base text-[#000] ml-10">
-                                    {item._id}
+                                    {formatDate(item.createdAt)}
                                 </span>
                             </div>
                         </div>
@@ -282,7 +289,7 @@ const PostReportPage = () => {
                                 <span className="text-xl text-[#000] font-semibold">
                                     Status:
                                 </span>
-                                <span className={`text-xl ${item.status == 'pending' ? 'text-[#0CBBF0]' : item.status == 'rejected' ? 'text-green-500' : 'text-red-500'} ml-5`}>
+                                <span className={`text-xl ${item.status == 'pending' ? 'text-[#0CBBF0]' : item.status == 'rejected' ? 'text-red-500' : 'text-green-500'} ml-5`}>
                                     {item.status}
                                 </span>
                             </div>
@@ -314,7 +321,7 @@ const PostReportPage = () => {
                             <div className="flex gap-4">
                                 <button
                                     disabled={handleDisable}
-                                    className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
+                                    className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
                                         }`}
                                     onClick={() => {
                                         handleReport({
@@ -324,11 +331,11 @@ const PostReportPage = () => {
                                         setShowDialog(false);
                                     }}
                                 >
-                                    Remove post
+                                    Resolve
                                 </button>
                                 <button
                                     disabled={handleDisable}
-                                    className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
+                                    className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
                                         }`}
                                     onClick={() => {
                                         handleReport({
@@ -338,7 +345,7 @@ const PostReportPage = () => {
                                         setShowDialog(false);
                                     }}
                                 >
-                                    Dismiss
+                                    Reject
                                 </button>
                             </div>
                         }
@@ -355,15 +362,6 @@ const PostReportPage = () => {
             </>
         );
     };
-    console.log(data)
-
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        const formattedDate = date.toLocaleDateString("vi-VN");
-        const formattedTime = date.toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        return `${formattedDate} ${formattedTime}`;
-    };
-
     return (
         <div className="pl-12 pr-12 w-full">
             <div className="flex w-full mb-4 border-[1px] border-[#C2D3FF] pt-2 pb-2 pr-5 pl-5">
@@ -394,9 +392,9 @@ const PostReportPage = () => {
                                 key={index}
                                 className={`flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] rounded-2xl 
                             ${item?.status === "rejected"
-                                        ? "border-green-500"
+                                        ? "border-red-500"
                                         : item?.status === "resolved"
-                                            ? "border-red-500"
+                                            ? "border-green-500"
                                             : "border-[#C2D3FF]"
                                     }
                             `}

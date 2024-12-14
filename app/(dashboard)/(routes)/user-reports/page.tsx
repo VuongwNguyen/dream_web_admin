@@ -119,6 +119,9 @@ const UserReportPage = () => {
                 <div className="flex-[2] text-center text-lg font-bold">
                     Reasons
                 </div>
+                <div className="flex-[2] text-center text-lg font-bold">
+                    Descriptions
+                </div>
             </div>
             <div className="flex flex-col w-full gap-4">
                 {data &&
@@ -131,8 +134,9 @@ const UserReportPage = () => {
                                     item.status === "pending"
                                         ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#C2D3FF] rounded-2xl"
                                         : item.status === "rejected"
-                                            ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
-                                            : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl"
+                                            ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl"
+                                            : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
+
                                 }
                                 onClick={() => {
                                     setShowDialog(true);
@@ -150,6 +154,9 @@ const UserReportPage = () => {
                                 </div>
                                 <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-center">
                                     {item.reason}
+                                </div>
+                                <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-center">
+                                    {item.description ? item.description : 'No description'}
                                 </div>
                             </button>
                         );
