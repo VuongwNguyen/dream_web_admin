@@ -4,6 +4,7 @@ interface Report {
     status?: string;
     description?: string;
     createdAt: string;
+    updatedAt: string;
     reported_user?: any;
     reported_content?: any;
     judger?: any

@@ -26,10 +26,11 @@ const UserReportPage = () => {
     }, [RefreshDataReport]);
 
     const formatDate = (dateString: string) => {
-        const date = new Date(dateString); // Chuyển đổi chuỗi thành đối tượng Date
-        return date.toLocaleDateString("vi-VN"); // Định dạng theo vùng Việt Nam
+        const date = new Date(dateString);
+        const formattedDate = date.toLocaleDateString("vi-VN");
+        const formattedTime = date.toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        return `${formattedDate} ${formattedTime}`;
     };
-
     const pagination = () => {
         const handlePrevious = () => {
             if (pageSelected * 9 < data.length) {
@@ -88,8 +89,8 @@ const UserReportPage = () => {
                             setIndexS(page * 9 - 9);
                         }}
                         className={`py-1 px-3 rounded-lg ${page === pageSelected
-                                ? "bg-[#0CBBF0] text-white"
-                                : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
+                            ? "bg-[#0CBBF0] text-white"
+                            : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
                             } transition`}
                     >
                         {page}
@@ -130,8 +131,8 @@ const UserReportPage = () => {
                                     item.status === "pending"
                                         ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#C2D3FF] rounded-2xl"
                                         : item.status === "rejected"
-                                            ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl"
-                                            : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
+                                            ? "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#46f646] rounded-2xl"
+                                            : "flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] border-[#FFC0C0] rounded-2xl"
                                 }
                                 onClick={() => {
                                     setShowDialog(true);
@@ -145,7 +146,7 @@ const UserReportPage = () => {
                                     {item.reported_user.fullname}
                                 </div>
                                 <div className="text-sm font-semibold text-[#797D8C] flex-[1] text-center truncate">
-                                    {item.reported_content.email}
+                                    {item.reported_content.fullname}
                                 </div>
                                 <div className="text-sm font-regular text-[#797D8C] flex-[2]  truncate text-center">
                                     {item.reason}

@@ -7,13 +7,13 @@ import moment from "moment";
 const PostReportPage = () => {
     const [loading, setLoading] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
-
     // const windowHeight = window.innerHeight
     interface Report {
         _id: string;
         reason: string;
         description: string;
-        createAt: string;
+        createdAt: string;
+        updatedAt: string;
         status: string;
         reported_user: {
             _id: string;
@@ -43,7 +43,8 @@ const PostReportPage = () => {
         _id: "",
         reason: "",
         description: "",
-        createAt: "",
+        createdAt: "",
+        updatedAt: "",
         status: "",
         reported_user: {
             _id: "",
@@ -150,11 +151,10 @@ const PostReportPage = () => {
                             setPageSelected(page);
                             fetchData(page);
                         }}
-                        className={`py-1 px-3 rounded-lg ${
-                            page === pageSelected
-                                ? "bg-[#0CBBF0] text-white"
-                                : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
-                        } transition`}
+                        className={`py-1 px-3 rounded-lg ${page === pageSelected
+                            ? "bg-[#0CBBF0] text-white"
+                            : "bg-[#D9F6FF] text-[#0CBBF0] hover:bg-[#96E7FF] transition"
+                            } transition`}
                     >
                         {page}
                     </button>
@@ -185,7 +185,7 @@ const PostReportPage = () => {
                                 Reporter:
                             </span>
                             <span className="text-base text-[#000] ml-10">
-                                {item.reported_user.email}
+                                {item.reported_user.fullname}
                             </span>
                         </div>
                         <div className="flex flex-row gap-[200px] items-center ">
@@ -194,7 +194,7 @@ const PostReportPage = () => {
                                     Reported user:
                                 </span>
                                 <span className="text-base text-[#000] ml-10">
-                                    {item.reported_content.author.email}
+                                    {item.reported_content.author.fullname}
                                 </span>
                             </div>
                             <div>
@@ -262,73 +262,86 @@ const PostReportPage = () => {
                                 )}
                                 {item?.reported_content?.hashtags?.length >
                                     0 && (
-                                    <div className="flex flex-row gap-[10px]">
-                                        <span className="text-base text-[#000] font-medium">
-                                            Hashtag:
-                                        </span>
-                                        <div>
-                                            {item?.reported_content?.hashtags.map(
-                                                (tag, index) => (
-                                                    <span>#{tag} </span>
-                                                )
-                                            )}
+                                        <div className="flex flex-row gap-[10px]">
+                                            <span className="text-base text-[#000] font-medium">
+                                                Hashtag:
+                                            </span>
+                                            <div>
+                                                {item?.reported_content?.hashtags.map(
+                                                    (tag, index) => (
+                                                        <span>#{tag} </span>
+                                                    )
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
+                                    )}
                             </div>
                         </div>
                         {!!item?.status && (
                             <div>
-                                <span className="text-base text-[#000] font-semibold">
+                                <span className="text-xl text-[#000] font-semibold">
                                     Status:
                                 </span>
-                                <span className="text-base text-[#000] ml-10">
+                                <span className={`text-xl ${item.status == 'pending' ? 'text-[#0CBBF0]' : item.status == 'rejected' ? 'text-green-500' : 'text-red-500'} ml-5`}>
                                     {item.status}
                                 </span>
                             </div>
                         )}
                         {item?.status !== "pending" && (
                             <div>
-                                <span className="text-base text-[#000] font-semibold">
+                                <span className="text-xl text-[#000] font-semibold">
                                     Judger:
                                 </span>
-                                <span className="text-base text-[#000] ml-10">
-                                    {item.judger.email}
+                                <span className="text-xl text-[#000] ml-5">
+                                    {item.judger.fullname}
+                                </span>
+                            </div>
+                        )}
+                        {item?.status !== "pending" && (
+                            <div>
+                                <span className="text-xl text-[#000] font-semibold">
+                                    Processing date:
+                                </span>
+                                <span className="text-xl text-[#000] ml-5">
+                                    {formatDate(item.updatedAt)}
                                 </span>
                             </div>
                         )}
                     </div>
                     <div className="flex justify-end gap-5">
-                        <button
-                            disabled={handleDisable}
-                            className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${
-                                handleDisable && "opacity-50"
-                            }`}
-                            onClick={() => {
-                                handleReport({
-                                    report_id: item._id,
-                                    status: "resolved",
-                                });
-                                setShowDialog(false);
-                            }}
-                        >
-                            Remove post
-                        </button>
-                        <button
-                            disabled={handleDisable}
-                            className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${
-                                handleDisable && "opacity-50"
-                            }`}
-                            onClick={() => {
-                                handleReport({
-                                    report_id: item._id,
-                                    status: "rejected",
-                                });
-                                setShowDialog(false);
-                            }}
-                        >
-                            Dismiss
-                        </button>
+                        {
+                            item.status === "pending" &&
+                            <div className="flex gap-4">
+                                <button
+                                    disabled={handleDisable}
+                                    className={`bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
+                                        }`}
+                                    onClick={() => {
+                                        handleReport({
+                                            report_id: item._id,
+                                            status: "resolved",
+                                        });
+                                        setShowDialog(false);
+                                    }}
+                                >
+                                    Remove post
+                                </button>
+                                <button
+                                    disabled={handleDisable}
+                                    className={`bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded ${handleDisable && "opacity-50"
+                                        }`}
+                                    onClick={() => {
+                                        handleReport({
+                                            report_id: item._id,
+                                            status: "rejected",
+                                        });
+                                        setShowDialog(false);
+                                    }}
+                                >
+                                    Dismiss
+                                </button>
+                            </div>
+                        }
                         <button
                             className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
                             onClick={() => {
@@ -342,11 +355,19 @@ const PostReportPage = () => {
             </>
         );
     };
+    console.log(data)
+
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const formattedDate = date.toLocaleDateString("vi-VN");
+        const formattedTime = date.toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        return `${formattedDate} ${formattedTime}`;
+    };
 
     return (
         <div className="pl-12 pr-12 w-full">
             <div className="flex w-full mb-4 border-[1px] border-[#C2D3FF] pt-2 pb-2 pr-5 pl-5">
-                <div className="flex-[1] text-left text-lg font-bold">Date</div>
+                <div className="flex-[1] text-center text-lg font-bold">Date</div>
 
                 <div className="flex-[2] text-center text-lg font-bold">
                     Reporter
@@ -354,10 +375,6 @@ const PostReportPage = () => {
 
                 <div className="flex-[2] text-center text-lg font-bold">
                     Reported user
-                </div>
-
-                <div className="flex-[2] text-center text-lg font-bold">
-                    Post ID
                 </div>
 
                 <div className="flex-[2] text-center text-lg font-bold">
@@ -376,35 +393,31 @@ const PostReportPage = () => {
                             <button
                                 key={index}
                                 className={`flex flex-row w-full pt-2 pb-2 justify-between items-center pr-5 pl-5 border-[1px] rounded-2xl 
-                            ${
-                                item?.status === "rejected"
-                                    ? "border-green-500"
-                                    : item?.status === "resolved"
-                                    ? "border-red-500"
-                                    : "border-[#C2D3FF]"
-                            }
+                            ${item?.status === "rejected"
+                                        ? "border-green-500"
+                                        : item?.status === "resolved"
+                                            ? "border-red-500"
+                                            : "border-[#C2D3FF]"
+                                    }
                             `}
                                 onClick={() => {
                                     setShowDialog(true);
                                     setDataDialog(item);
                                 }}
                             >
-                                <div className="text-base font-regular text-[#797D8C] flex-[1] text-left">
-                                    {moment(item.createAt).format("DD/MM/YYYY")}
+                                <div className="text-base font-regular text-[#797D8C] flex-[1] text-center">
+                                    {formatDate(item?.createdAt)}
                                 </div>
                                 <div className="text-base font-regular text-[#797D8C] flex-[2] text-center truncate">
-                                    {item?.reported_user.email}
+                                    {item?.reported_user.fullname}
                                 </div>
                                 <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate">
-                                    {item.reported_content.author.email}
+                                    {item.reported_content.author.fullname}
                                 </div>
-                                <div className="text-sm font-semibold text-[#797D8C] flex-[2] text-center px-2">
-                                    {item._id}
-                                </div>
-                                <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate px-5">
+                                <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate">
                                     {item.reason}
                                 </div>
-                                <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate pf-5">
+                                <div className="text-sm font-regular text-[#797D8C] flex-[2] text-center truncate">
                                     {!!item.description
                                         ? item.description
                                         : "Null"}

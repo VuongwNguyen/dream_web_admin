@@ -124,7 +124,7 @@ const UserPage = () => {
                 {/* Header table */}
                 <div className="w-full border h-16 flex border-[#c2d3ff] items-center">
                     <div className="w-1/5 text-center text-base font-bold">
-                        STT
+                        No.
                     </div>
                     <div className="w-1/5 text-center text-base font-bold">
                         Name

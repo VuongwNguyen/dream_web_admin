@@ -70,8 +70,17 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
         fetchData();
     }, [currentPage, item.reported_content._id]);
 
+    const formatDate = (dateString: string) => {
+        const date = new Date(dateString);
+        const formattedDate = date.toLocaleDateString("vi-VN");
+        const formattedTime = date.toLocaleTimeString("vi-VN", { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        return `${formattedDate} ${formattedTime}`;
+    };
+
     // Tạo danh sách các trang từ 1 đến maxPage
     const pageNumbers = Array.from({ length: maxPage }, (_, index) => index + 1);
+
+
 
     return (
         <>
@@ -85,7 +94,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                     </div>
                     <div>
                         <span className="text-base text-[#000] font-semibold">Reported user:</span>
-                        <span className="text-base text-[#000] ml-10">{item.reported_content.email}</span>
+                        <span className="text-base text-[#000] ml-10">{item.reported_content.fullname}</span>
                     </div>
                 </div>
                 <div className="mb-4">
@@ -145,55 +154,68 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                     <div className="flex-1">
                         {!!item?.status && (
                             <div>
-                                <span className="text-base text-[#000] font-semibold">
+                                <span className="text-xl text-[#000] font-semibold">
                                     Status:
                                 </span>
-                                <span className="text-base text-[#000] ml-10">
+                                <span className={`text-xl ${item.status == 'pending' ? 'text-[#0CBBF0]' : item.status == 'rejected' ? 'text-green-500' : 'text-red-500'} ml-5`}>
                                     {item.status}
                                 </span>
                             </div>
                         )}
                         {item?.status !== "pending" && (
                             <div>
-                                <span className="text-base text-[#000] font-semibold">
+                                <span className="text-xl text-[#000] font-semibold">
                                     Judger:
                                 </span>
-                                <span className="text-base text-[#000] ml-10">
+                                <span className="text-xl text-[#000] ml-5">
                                     {item.judger.fullname}
                                 </span>
                             </div>
                         )}
+                        {item?.status !== "pending" && (
+                            <div>
+                                <span className="text-xl text-[#000] font-semibold">
+                                    Processing date:
+                                </span>
+                                <span className="text-xl text-[#000] ml-5">
+                                    {formatDate(item.updatedAt)}
+                                </span>
+                            </div>
+                        )}
                     </div>
-                    <div className="flex items-center gap-10">
-                        <div className="w-60">
-                            <span className="text-lg font-semibold">Date of judge</span>
+                </div>
+                <div className="flex items-center justify-end gap-5">
+                    {
+                        item.status === 'pending' &&
+                        <div className="flex items-center gap-5">
+                            <div className="w-60">
+                                <span className="text-lg font-semibold">Date of judge</span>
+                            </div>
+                            <Select
+                                onValueChange={(value) => setJudge(value)}
+                            >
+                                <SelectTrigger className="w-4/5">
+                                    <SelectValue placeholder={judge === '0' && 'No Infringement'} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="0">No Infringement</SelectItem>
+                                    <SelectItem value="1">1 day</SelectItem>
+                                    <SelectItem value="2">3 days</SelectItem>
+                                    <SelectItem value="3">7 days</SelectItem>
+                                    <SelectItem value="4">1 month</SelectItem>
+                                    <SelectItem value="5">Permanent</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <button
+                                onClick={handleRoleChange}
+                                className={item.status === "pending" ? "bg-green-500 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded" : "bg-green-400 text-white font-semibold py-2 px-4 rounded"}
+                            >
+                                Save
+                            </button>
                         </div>
-                        <Select
-                            disabled={item.status === "pending" ? false : true}
-                            onValueChange={(value) => setJudge(value)}
-                        >
-                            <SelectTrigger className="w-4/5">
-                                <SelectValue placeholder={judge === '0' && 'No Infringement'} />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="0">No Infringement</SelectItem>
-                                <SelectItem value="1">1 day</SelectItem>
-                                <SelectItem value="2">3 days</SelectItem>
-                                <SelectItem value="3">7 days</SelectItem>
-                                <SelectItem value="4">1 month</SelectItem>
-                                <SelectItem value="5">Permanent</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    }
                     <button
-                        disabled={item.status === "pending" ? false : true}
-                        onClick={handleRoleChange}
-                        className={item.status === "pending" ? "bg-green-500 hover:bg-green-400 text-white font-semibold py-2 px-4 rounded" : "bg-green-400 text-white font-semibold py-2 px-4 rounded"}
-                    >
-                        Save
-                    </button>
-                    <button
-                        className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
+                        className="h-12 border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
                         onClick={() => setShowDialog(false)}
                     >
                         Cancel
