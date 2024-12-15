@@ -1,14 +1,17 @@
 import React, { memo, useEffect, useState } from "react";
 import AxiosInstance from "@/constants/AxiosInstance";
 import { Select } from "@radix-ui/react-select";
-import { SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Post } from "@/interfaces/post";
 import ItemPost from "./ItemPost";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Button } from "./ui/button";
 
 interface DialogProps {
     _id?: string;
+    isBanned?: boolean
     setShowDialog: React.Dispatch<React.SetStateAction<boolean>>;
+    setRefreshDataUser: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 interface UserIF {
@@ -18,16 +21,19 @@ interface UserIF {
     followerCount: number;
     postCount: number;
     avatar: string;
+    isBanned: boolean
 }
 
 
-const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
+const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefreshDataUser }) => {
     const [loading, setLoading] = useState(false);
     const [dataPost, setDataPost] = useState<Post[]>([]);
     const [userIF, setUserIF] = useState<UserIF>()
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [judge, setJudge] = useState("0");
+    const [selectReason, setSelectReason] = useState<string>('');
+    const [selectDay, setSelectDay] = useState<string>('')
 
 
     const fetchData = async () => {
@@ -37,7 +43,6 @@ const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
             const response = await AxiosInstance().get(
                 `statistical/posts?user_id=${_id}&_page=${currentPage}&_limit=12`
             );
-            console.log(response.data.list)
             setDataPost(response.data.list);
             setMaxPage(response.data.page.max);
         } catch (error) {
@@ -66,6 +71,56 @@ const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
     useEffect(() => {
         fecthDataUser();
     }, [_id]);
+
+    const handleSelectReason = (value: string) => {
+        setSelectReason(value);
+    }
+    const handleSelecDay = (value: string) => {
+        setSelectDay(value);;
+    }
+
+    const handleLockUnLockUser = async () => {
+        try {
+            let today: Date | null = new Date();
+            switch (judge) {
+                case "1":
+                    today.setDate(today.getDate() + 1);
+                    break;
+                case "2":
+                    today.setDate(today.getDate() + 3);
+                    break;
+                case "3":
+                    today.setDate(today.getDate() + 7);
+                    break;
+                case "4":
+                    today.setDate(today.getDate() + 30);
+                    break;
+                case "5":
+                    today = null;
+                    break;
+            }
+            if (!isBanned) {
+                if (!selectDay || !selectDay) {
+                    alert("Please select reason and date of ban");
+                    return;
+                }
+            }
+            const body = {
+                user_id: _id,
+                date_of_judge: today,
+                reason: selectReason
+            }
+            const response = await AxiosInstance().put(`/admin/lock-unlock-user`, body)
+            if (response.status) {
+                alert("Cập nhật trạng thái thành công!");
+                setShowDialog(false);
+                setRefreshDataUser(true)
+            }
+        } catch (error) {
+
+        }
+    }
+
 
 
 
@@ -154,13 +209,53 @@ const DialogIF: React.FC<DialogProps> = ({ _id, setShowDialog }) => {
 
                 <div className="flex justify-end gap-5 mt-4">
                     <div className="flex items-center gap-10">
+                        {
+                            isBanned ?
+                                <div>
+                                    <Button className="bg-green-500 hover:bg-green-500" onClick={handleLockUnLockUser}>
+                                        Unlock
+                                    </Button>
+                                </div>
+                                :
+                                <div className="flex items-center gap-3">
+                                    <Select value={selectReason} onValueChange={handleSelectReason}>
+                                        <SelectTrigger className="w-52">
+                                            <SelectValue placeholder="Select Reason" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Select Reason</SelectLabel>
+                                                <SelectItem value='Impersonating someone else'>Impersonating someone else</SelectItem>
+                                                <SelectItem value='Fake account Descending sort'>Fake account Descending sort</SelectItem>
+                                                <SelectItem value='Fake name'>Fake name</SelectItem>
+                                                <SelectItem value='Harassment or bullying'>Harassment or bullying</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    <Select value={selectDay} onValueChange={handleSelecDay}>
+                                        <SelectTrigger className="w-52">
+                                            <SelectValue placeholder="Date of judge" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Date of judge</SelectLabel>
+                                                <SelectItem value="1">1 day</SelectItem>
+                                                <SelectItem value="2">3 days</SelectItem>
+                                                <SelectItem value="3">7 days</SelectItem>
+                                                <SelectItem value="4">1 month</SelectItem>
+                                                <SelectItem value="5">Permanent</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                    <Button className="bg-red-500 hover:bg-red-500" onClick={handleLockUnLockUser}>
+                                        Lock
+                                    </Button>
+                                </div>
+                        }
                     </div>
-                    <button
-                        className="border-[2px] border-[#6d6e6f] hover:bg-gray-200 text-black font-semibold py-2 px-4 rounded"
-                        onClick={() => setShowDialog(false)}
-                    >
+                    <Button variant='outline' onClick={() => setShowDialog(false)}>
                         Cancel
-                    </button>
+                    </Button>
                 </div>
             </div>
         </>

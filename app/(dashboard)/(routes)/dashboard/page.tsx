@@ -30,7 +30,7 @@ const DashboardPage = () => {
     const [showDialog, setShowDialog] = useState(false);
     const [selectedUser, setSelectedUser] = useState<string>();
     const [sortType, setSortType] = useState<string>('');
-
+    const [RefreshDataUser, setRefreshDataUser] = useState<boolean>(false)
 
 
     const handleSortTypeChange = (value: string) => {
@@ -168,7 +168,7 @@ const DashboardPage = () => {
                 </div>
             </div>
             {showDialog && (
-                <DialogIF _id={selectedUser} setShowDialog={setShowDialog} />
+                <DialogIF _id={selectedUser} setShowDialog={setShowDialog} setRefreshDataUser={setRefreshDataUser} />
             )}
         </div>
     )

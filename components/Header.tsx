@@ -12,23 +12,14 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/src/contexts/UserContext";
 const Header = () => {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
-    const [fullname, setFullname] = useState("Username");
-    const [avatar, setAvatar] = useState(
-        "https://i.pinimg.com/564x/b4/c9/e6/b4c9e629c472e0b7ed57268384d09e5f.jpg"
-    );
+    const { fullname, avatar } = useUser();
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
     };
-    useEffect(() => {
-        const name = Cookies.get("fullname") ?? "";
-        const avt = Cookies.get("avatar") ?? "";
-        setAvatar(avt);
-        setFullname(name);
-    }, []);
-
     const handleLogout = () => {
         alert("You have been logged out!");
         Cookies.remove("token");
@@ -38,7 +29,7 @@ const Header = () => {
         router.replace('/login')
     };
     return (
-        <div className="w-full h-20 pl-14 pr-14 pt-7 pb-7 mb-8">
+        <div className="w-full h-20 pl-14 pr-14 pt-7 pb-7 mb-8 border-b-[1px]">
             <div className="flex justify-between items-center">
                 <div className="text-3xl font-bold">Overview</div>
                 <div className="flex items-center gap-10">
@@ -78,28 +69,27 @@ const Header = () => {
                                         aria-labelledby="menu-button"
                                     >
                                         <div className="py-1" role="none">
-                                            <a
-                                                href="#"
-                                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            <button
+                                                onClick={() => { router.push('/setting-profile'); setIsOpen(false); }}
+                                                className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                 role="menuitem"
                                             >
                                                 Profile
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            </button>
+                                            <button
+                                                onClick={() => alert("Settings clicked!")} // Thay bằng logic cài đặt
+                                                className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                 role="menuitem"
                                             >
                                                 Settings
-                                            </a>
-                                            <a
-                                                href="#"
+                                            </button>
+                                            <button
                                                 onClick={handleLogout}
-                                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                                 role="menuitem"
                                             >
                                                 Logout
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                 )}
