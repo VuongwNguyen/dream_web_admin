@@ -60,14 +60,10 @@ const SettingProfilePage: React.FC = () => {
                 setIsLoadingUp(false);
                 return;
             }
-            if (!avatar) {
-                setIsLoadingUp(false);
-                return;
-            }
-
             setErrorDescription({});
-            console.log(avatar)
-            formData.append('avatar', avatar);
+            if (avatar) {
+                formData.append('avatar', avatar);
+            }
             formData.append('first_name', firstName);
             formData.append('last_name', lastName);
 

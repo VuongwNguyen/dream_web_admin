@@ -78,9 +78,43 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
     };
 
     // Tạo danh sách các trang từ 1 đến maxPage
-    const pageNumbers = Array.from({ length: maxPage }, (_, index) => index + 1);
+    const renderPagination = () => {
+        const pageNumbers: number[] = [];
+        const visiblePages = 5;
 
+        const startPage = Math.max(currentPage - Math.floor(visiblePages / 2), 1);
+        const endPage = Math.min(startPage + visiblePages - 1, maxPage);
 
+        if (startPage > 1) {
+            pageNumbers.push(1);
+            if (startPage > 2) pageNumbers.push(-1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(i);
+        }
+
+        if (endPage < maxPage) {
+            if (endPage < maxPage - 1) pageNumbers.push(-1);
+            pageNumbers.push(maxPage);
+        }
+
+        return pageNumbers.map((page, index) =>
+            page === -1 ? (
+                <div key={`ellipsis-${index}`} className="w-10 h-10 flex items-end justify-center">
+                    <span key={index} className="font-bold text-base">...</span>
+                </div>
+            ) : (
+                <button
+                    key={`ellipsis-${index}`}
+                    className={`w-10 h-10 ${currentPage === page ? "bg-[#0cbbf0] text-white" : "bg-[#d9f6ff]"} rounded-lg`}
+                    onClick={() => setCurrentPage(page)}
+                >
+                    {page}
+                </button>
+            )
+        );
+    };
 
     return (
         <>
@@ -139,17 +173,7 @@ const DialogReport: React.FC<DialogProps> = ({ item, setShowDialog, setRefreshDa
                     >
                         <div className="text-[#0cbbf0]">{`<<`}</div>
                     </button>
-                    <div className="flex gap-2">
-                        {pageNumbers.map((page) => (
-                            <button
-                                key={page}
-                                className={`w-10 h-10 ${currentPage === page ? "bg-[#0cbbf0] text-white" : "bg-[#d9f6ff]"} rounded-lg`}
-                                onClick={() => setCurrentPage(page)}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                    </div>
+                    {renderPagination()}
                     <button
                         className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
                         onClick={() => setCurrentPage(currentPage < maxPage ? currentPage + 1 : maxPage)}
