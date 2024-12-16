@@ -31,7 +31,6 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
     const [userIF, setUserIF] = useState<UserIF>()
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const [judge, setJudge] = useState("0");
     const [selectReason, setSelectReason] = useState<string>('');
     const [selectDay, setSelectDay] = useState<string>('')
 
@@ -82,7 +81,7 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
     const handleLockUnLockUser = async () => {
         try {
             let today: Date | null = new Date();
-            switch (judge) {
+            switch (selectDay) {
                 case "1":
                     today.setDate(today.getDate() + 1);
                     break;
@@ -99,8 +98,9 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
                     today = null;
                     break;
             }
+
             if (!isBanned) {
-                if (!selectDay || !selectDay) {
+                if (!selectDay) {
                     alert("Please select reason and date of ban");
                     return;
                 }
@@ -110,6 +110,7 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
                 date_of_judge: today,
                 reason: selectReason
             }
+            console.log(body)
             const response = await AxiosInstance().put(`/admin/lock-unlock-user`, body)
             if (response.status) {
                 alert("Cập nhật trạng thái thành công!");

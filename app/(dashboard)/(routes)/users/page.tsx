@@ -123,7 +123,10 @@ const UserPage = () => {
                         </SelectGroup>
                     </SelectContent>
                 </Select>
-                <Select value={sortStatus} onValueChange={(value) => setSortStatus(value)}>
+                <Select value={sortStatus} onValueChange={(value) => {
+                    setSortStatus(value)
+                    setCurrentPage(1)
+                }}>
                     <SelectTrigger className="w-52">
                         <SelectValue placeholder="Sort status" />
                     </SelectTrigger>
