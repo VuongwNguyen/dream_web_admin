@@ -110,7 +110,6 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
                 date_of_judge: today,
                 reason: selectReason
             }
-            console.log(body)
             const response = await AxiosInstance().put(`/admin/lock-unlock-user`, body)
             if (response.status) {
                 alert("Cập nhật trạng thái thành công!");
