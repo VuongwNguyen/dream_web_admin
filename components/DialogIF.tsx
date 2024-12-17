@@ -31,7 +31,6 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
     const [userIF, setUserIF] = useState<UserIF>()
     const [maxPage, setMaxPage] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const [judge, setJudge] = useState("0");
     const [selectReason, setSelectReason] = useState<string>('');
     const [selectDay, setSelectDay] = useState<string>('')
 
@@ -82,7 +81,7 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
     const handleLockUnLockUser = async () => {
         try {
             let today: Date | null = new Date();
-            switch (judge) {
+            switch (selectDay) {
                 case "1":
                     today.setDate(today.getDate() + 1);
                     break;
@@ -99,8 +98,9 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
                     today = null;
                     break;
             }
+
             if (!isBanned) {
-                if (!selectDay || !selectDay) {
+                if (!selectDay) {
                     alert("Please select reason and date of ban");
                     return;
                 }
@@ -124,8 +124,43 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
 
 
 
-    // Tạo danh sách các trang từ 1 đến maxPage
-    const pageNumbers = Array.from({ length: maxPage }, (_, index) => index + 1);
+    const renderPagination = () => {
+        const pageNumbers: number[] = [];
+        const visiblePages = 5;
+
+        const startPage = Math.max(currentPage - Math.floor(visiblePages / 2), 1);
+        const endPage = Math.min(startPage + visiblePages - 1, maxPage);
+
+        if (startPage > 1) {
+            pageNumbers.push(1);
+            if (startPage > 2) pageNumbers.push(-1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(i);
+        }
+
+        if (endPage < maxPage) {
+            if (endPage < maxPage - 1) pageNumbers.push(-1);
+            pageNumbers.push(maxPage);
+        }
+
+        return pageNumbers.map((page, index) =>
+            page === -1 ? (
+                <div key={`ellipsis-${index}`} className="w-10 h-10 flex items-end justify-center">
+                    <span className="font-bold text-base">...</span>
+                </div>
+            ) : (
+                <button
+                    key={`page-${page}`}
+                    className={`w-10 h-10 ${currentPage === page ? "bg-[#0cbbf0] text-white" : "bg-[#d9f6ff]"} rounded-lg`}
+                    onClick={() => setCurrentPage(page)}
+                >
+                    {page}
+                </button>
+            )
+        );
+    };
 
     return (
         <>
@@ -187,17 +222,7 @@ const DialogIF: React.FC<DialogProps> = ({ _id, isBanned, setShowDialog, setRefr
                     >
                         <div className="text-[#0cbbf0]">{`<<`}</div>
                     </button>
-                    <div className="flex gap-2">
-                        {pageNumbers.map((page) => (
-                            <button
-                                key={page}
-                                className={`w-10 h-10 ${currentPage === page ? "bg-[#0cbbf0] text-white" : "bg-[#d9f6ff]"} rounded-lg`}
-                                onClick={() => setCurrentPage(page)}
-                            >
-                                {page}
-                            </button>
-                        ))}
-                    </div>
+                    {renderPagination()}
                     <button
                         className="w-10 h-10 bg-[#d9f6ff] rounded-lg"
                         onClick={() => setCurrentPage(currentPage < maxPage ? currentPage + 1 : maxPage)}
